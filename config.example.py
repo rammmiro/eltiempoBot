@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+BOTNAME = "BOTNAME"
+TELEGRAMTOKEN = "TELEGRAMTOKEN"
+GOOGLEMAPSKEY = "GOOGLEMAPSKEY"
