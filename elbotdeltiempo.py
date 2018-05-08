@@ -62,6 +62,13 @@ def start(bot, update):
         text=u'Para que te diga el tiempo envía /tiempo.\nPara acceder a todas las opciones pulsa /configuracion.\nPara tener más ayuda manda /ayuda.',
         parse_mode=ParseMode.MARKDOWN)
 
+def getUser(bot, update):
+    user = collection.find_one({"_id":update.message.chat_id})
+    if user is None:
+        start(bot, update)
+        user = collection.find_one({"_id":update.message.chat_id})
+    return user
+
 
 def new_chat_member(bot, update):
     if  any(user.username == BOTNAME for user in update.message.new_chat_members):
@@ -69,7 +76,7 @@ def new_chat_member(bot, update):
 
 def stop(bot, update):
     logger.info("User %s canceled the conversation.", update.message.from_user.first_name)
-    user = collection.find_one({"_id":update.message.chat_id})
+    user = getUser(bot, update)
     collection.update_one({'_id':update.message.chat_id}, {"$set": {"activo": False}}, upsert=False)
 
 def left_chat_member(bot, update):
@@ -82,7 +89,7 @@ def help(bot, update):
     update.message.reply_text(u'Todavía estoy en beta! Pronto añadiré más ayuda.')
 
 def municipio(bot, update):
-    user = collection.find_one({"_id":update.message.chat_id})
+    user = getUser(bot, update)
     if update.message.text == "/municipio":
         if "municipio" in user:
             bot.send_message(chat_id=update.message.chat_id,
@@ -133,7 +140,7 @@ def municipio(bot, update):
                     parse_mode=ParseMode.MARKDOWN)
                 continue
 def comandoTiempo(bot,update):
-    user = collection.find_one({"_id":update.message.chat_id})
+    user = getUser(bot, update)
     tiempo(bot,user,user["configurarTiempo"]["dias"],user["configurarTiempo"]["horas"]["hoy"],user["configurarTiempo"]["horas"]["manyana"],False)
 
 def alerta(bot, job): #se puede combinar con tiempo
@@ -222,7 +229,7 @@ def prediccionHora(dia,hora,user):
     return prediccion
 
 def configurar(bot, update):
-    user = collection.find_one({"_id":update.message.chat_id})
+    user = getUser(bot, update)
     update.message.reply_text(u'Configuración:', reply_markup=crearTecladoConfigurar(user))
 
 def crearTecladoConfigurar(user):
@@ -301,7 +308,7 @@ def error(bot, update, error):
     try:
         raise error
     except Unauthorized:
-        user = collection.find_one({"_id":update.message.chat_id})
+        user = getUser(bot, update)
         collection.update_one({'_id':update.message.chat_id}, {"$set": {"activo": False}}, upsert=False)
         # remove update.message.chat_id from conversation list
 
