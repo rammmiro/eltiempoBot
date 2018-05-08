@@ -28,9 +28,7 @@ from auxiliar import estados_cielo, direccion_viento, num_emoji, active_emoji, a
 from config import TELEGRAMTOKEN, GOOGLEMAPSKEY, BOTNAME
 
 # Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
-
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename='./logs/'+datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+'.log', filemode='w',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 gmaps = googlemaps.Client(key=GOOGLEMAPSKEY)
@@ -146,6 +144,7 @@ def alerta(bot, job): #se puede combinar con tiempo
             tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],True)
 
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
+    logger.info("hola, alguien ha pedido el tiempo")
     if "idMunicipio" not in user:
         bot.send_message(chat_id=user["_id"],
             text=u"Primero tienes que decirme tu municipio con `/municipio`. Por ejemplo:\n`/municipio Soria`",
