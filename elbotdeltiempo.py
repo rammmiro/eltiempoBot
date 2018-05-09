@@ -142,6 +142,7 @@ def comandoTiempo(bot,update):
     tiempo(bot,user,user["configurarTiempo"]["dias"],user["configurarTiempo"]["horas"]["hoy"],user["configurarTiempo"]["horas"]["manyana"],False)
 
 def alerta(bot, job): #se puede combinar con tiempo
+    logger.info(u'se está enviando la alerta')
     for user in collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}]}):
         if user["alerta"] == 1:
             tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],False)
@@ -321,7 +322,7 @@ def main():
     dp = updater.dispatcher
     jq = updater.job_queue
 
-    jq.run_daily(alerta,datetime.time(17,19))
+    jq.run_daily(alerta,datetime.time(21))
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
