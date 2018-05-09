@@ -42,31 +42,31 @@ collection = db.users
 def start(bot, update):
     """Send a message when the command /start is issued."""
     update.message.reply_text(u'¡Hola! Soy @' + BOTNAME + u'.')
-    if collection.find_one({"_id":update.message.chat_id}) is None:
-        collection.insert({"_id":update.message.chat_id})
+    if collection.find_one({"_id":update.effective_chat.id}) is None:
+        collection.insert({"_id":update.effective_chat.id})
     if update.message.chat.type == "private":
-        collection.update_one({'_id':update.message.chat_id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["configurandoAlerta1"], "tipo":update.message.chat.type, "nombre": update.message.chat.first_name, "alias": update.message.chat.username}}, upsert=False)
+        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["configurandoAlerta1"], "tipo":update.message.chat.type, "nombre": update.message.chat.first_name, "alias": update.message.chat.username}}, upsert=False)
     else:
-        collection.update_one({'_id':update.message.chat_id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": alertas["configurandoAlerta1"], "configurarAlerta": {"dias":[1]}, "tipo":update.message.chat.type, "titulo": update.message.chat.title}}, upsert=False)
-    user = collection.find_one({"_id":update.message.chat_id})
-    logging.info('nuevo usuario: ' + str(user))
+        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": alertas["configurandoAlerta1"], "configurarAlerta": {"dias":[1]}, "tipo":update.message.chat.type, "titulo": update.message.chat.title}}, upsert=False)
+    user = collection.find_one({"_id":update.effective_chat.id})
+    logger.info(u'nuevo usuario con id: ' + user["_id"] + u' se ha registrado')
     if "municipio" not in user:
-        bot.send_message(chat_id=update.message.chat_id,
+        bot.send_message(chat_id=update.effective_chat.id,
             text=u'Para empezar tienes que decirme cuál es tu municipio. Hazlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
             parse_mode=ParseMode.MARKDOWN)
     else:
-        bot.send_message(chat_id=update.message.chat_id,
+        bot.send_message(chat_id=update.effective_chat.id,
             text=u'Estoy configurado para enviarte información de *' + user["municipio"] + u'*. Puedes cambiarlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio ' + user["municipio"] +'`',
             parse_mode=ParseMode.MARKDOWN)
-    bot.send_message(chat_id=update.message.chat_id,
+    bot.send_message(chat_id=update.effective_chat.id,
         text=u'Para que te diga el tiempo envía /tiempo.\nPara acceder a todas las opciones pulsa /configuracion.\nPara tener más ayuda manda /ayuda.',
         parse_mode=ParseMode.MARKDOWN)
 
 def getUser(bot, update):
-    user = collection.find_one({"_id":update.message.chat_id})
+    user = collection.find_one({"_id":update.effective_chat.id})
     if user is None:
         start(bot, update)
-        user = collection.find_one({"_id":update.message.chat_id})
+        user = collection.find_one({"_id":update.effective_chat.id})
     return user
 
 
@@ -75,14 +75,12 @@ def new_chat_member(bot, update):
         start(bot,update)
 
 def stop(bot, update):
-    logger.info("User %s canceled the conversation.", update.message.from_user.first_name)
     user = getUser(bot, update)
-    collection.update_one({'_id':update.message.chat_id}, {"$set": {"activo": False}}, upsert=False)
+    logger.info(u'User %s canceled the conversation.', str(user["_id"]))
+    collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": False}}, upsert=False)
 
 def left_chat_member(bot, update):
-    logger.info("alguien se ha ido del grupo")
     if  update.message.left_chat_member.username == BOTNAME:
-        logger.info("he sido yo")
         stop(bot, update)
 
 def help(bot, update):
@@ -92,18 +90,18 @@ def municipio(bot, update):
     user = getUser(bot, update)
     if update.message.text == "/municipio":
         if "municipio" in user:
-            bot.send_message(chat_id=update.message.chat_id,
+            bot.send_message(chat_id=update.effective_chat.id,
                 text=u'Estoy configurado para enviarte información de *' + user["municipio"] + u'*. Puedes cambiarlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio ' + user["municipio"] +'`',
                 parse_mode=ParseMode.MARKDOWN)
         else:
-            bot.send_message(chat_id=update.message.chat_id,
+            bot.send_message(chat_id=update.effective_chat.id,
                 text=u'Envia el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
                 parse_mode=ParseMode.MARKDOWN)
         return
     geocode_result = gmaps.geocode(update.message.text[update.message.text.index(' ') + 1:])
     if not geocode_result:
-        logging.info("No existe ese municipio.")
-        bot.send_message(chat_id=update.message.chat_id,
+        logger.warning(u'El usuario %s ha buscado el municipio %s, que no existe.', str(user["_id"]),update.message.text[update.message.text.index(' ') + 1:])
+        bot.send_message(chat_id=update.effective_chat.id,
             text=u'¿Estás seguro de que has escrito bien el nombre de tu municipio? Envia el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
             parse_mode=ParseMode.MARKDOWN)
         return
@@ -111,31 +109,31 @@ def municipio(bot, update):
     try:
         pais = next((item for item in reverse_geocode_result[0]['address_components'] if item['types'][0] == 'country'),None)['short_name']
     except StopIteration:
-        logging.warning(u'stop iteration: sin país')
-        bot.send_message(chat_id=update.message.chat_id,
+        logger.warning(u'stop iteration: sin país')
+        bot.send_message(chat_id=update.effective_chat.id,
             text=u'¿Estás seguro de que has escrito bien el nombre de tu municipio? Envia el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
             parse_mode=ParseMode.MARKDOWN)
         return
     if pais != 'ES':
-        bot.send_message(chat_id=update.message.chat_id,
+        bot.send_message(chat_id=update.effective_chat.id,
             text=u'Solo conozco el tiempo de municipios españoles, lo siento.',
             parse_mode=ParseMode.MARKDOWN)
-        logging.warning(u'Ubicación en: ' + pais)
+        logger.warning(u'Ubicación en: %s',pais)
     else:
         for direccion in reverse_geocode_result:
             try:
                 nombre = next(item for item in direccion['address_components'] if item['types'][0] == 'locality')['long_name'].encode('utf-8')
                 if municipios.get(nombre.decode('utf-8').lower().encode('utf-8')) == None: nombre = next(item for item in direccion['address_components'] if item['types'][0] == 'administrative_area_level_4')['long_name'].encode('utf-8')
                 codigoMunicipio = municipios[nombre.decode('utf-8').lower().encode('utf-8')]
-                collection.update_one({'_id':update.message.chat_id}, {"$set": {"municipio": nombre, "idMunicipio": codigoMunicipio}}, upsert=False)
-                logging.info(str(update.message.chat_id) + u" ha cambiado su ubicación a " + nombre + " (" + str(codigoMunicipio).decode('utf-8') +")")
-                bot.send_message(chat_id=update.message.chat_id,
+                collection.update_one({'_id':update.effective_chat.id}, {"$set": {"municipio": nombre, "idMunicipio": codigoMunicipio}}, upsert=False)
+                bot.send_message(chat_id=update.effective_chat.id,
                     text=u'¡Municipio actualizado! 🌍\nAhora cuando me envíes el comando /tiempo te responderé con la predicción para *' + nombre + '*.',
                     parse_mode=ParseMode.MARKDOWN)
+                logger.info(u'%s ha cambiado su ubicación a %s (%s)',str(user["_id"]),nombre,str(codigoMunicipio).decode('utf-8'))
                 return
             except StopIteration:
-                logging.warning('stop iteration')
-                bot.send_message(chat_id=update.message.chat_id,
+                logger.warning('stop iteration')
+                bot.send_message(chat_id=update.effective_chat.id,
                     text=u'¿Estás seguro de que has escrito bien el nombre de tu municipio? Envia el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
                     parse_mode=ParseMode.MARKDOWN)
                 continue
@@ -151,7 +149,6 @@ def alerta(bot, job): #se puede combinar con tiempo
             tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],True)
 
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
-    logger.info("hola, alguien ha pedido el tiempo")
     if "idMunicipio" not in user:
         bot.send_message(chat_id=user["_id"],
             text=u"Primero tienes que decirme tu municipio con `/municipio`. Por ejemplo:\n`/municipio Soria`",
@@ -230,6 +227,7 @@ def prediccionHora(dia,hora,user):
 
 def configurar(bot, update):
     user = getUser(bot, update)
+    logger.info(u'el usuario %s quiere configurar', str(user["_id"]))
     update.message.reply_text(u'Configuración:', reply_markup=crearTecladoConfigurar(user))
 
 def crearTecladoConfigurar(user):
@@ -243,7 +241,6 @@ def crearTecladoConfigurar(user):
 
 def configuracionMenu(bot, update):
     query = update.callback_query
-    logger.info(query["message"]["chat"]["id"])
     user = collection.find_one({"_id":query["message"]["chat"]["id"]})
     if query["data"] == "configurarPrediccion":
         keyboard = [[InlineKeyboardButton(u"1 día", callback_data='configurandoPrediccion1'),
@@ -309,8 +306,8 @@ def error(bot, update, error):
         raise error
     except Unauthorized:
         user = getUser(bot, update)
-        collection.update_one({'_id':update.message.chat_id}, {"$set": {"activo": False}}, upsert=False)
-        # remove update.message.chat_id from conversation list
+        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": False}}, upsert=False)
+        # remove update.effective_chat.id from conversation list
 
 def main():
     """Start the bot."""
