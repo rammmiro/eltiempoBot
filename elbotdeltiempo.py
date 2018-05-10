@@ -355,6 +355,8 @@ def main():
     # log all errors
     dp.add_error_handler(error)
 
+    logger.info(u'comenzamos a las %s',datetime.datetime.now().time())
+
     # Start the Bot
     updater.start_polling()
 
