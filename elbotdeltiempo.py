@@ -13,7 +13,7 @@ La información metereológica que muestra El Bot del Tiempo ha sido elaborada p
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.error import TelegramError, Unauthorized
+from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, ChatMigrated, NetworkError)
 import googlemaps
 import logging
 import urllib
@@ -306,9 +306,25 @@ def error(bot, update, error):
     try:
         raise error
     except Unauthorized:
+        # remove update.message.chat_id from conversation list
         user = getUser(bot, update)
         collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": False}}, upsert=False)
-        # remove update.effective_chat.id from conversation list
+    except BadRequest:
+        # handle malformed requests - read more below!
+        logger.error('bad request')
+    except TimedOut:
+        # handle slow connection problems
+        logger.error('timed out')
+    except NetworkError:
+        # handle other connection problems
+        logger.error('network error')
+    except ChatMigrated as e:
+        # the chat_id of a group has changed, use e.new_chat_id instead
+        logger.error('chat migrated')
+    except TelegramError:
+        # handle all other telegram related errors
+        logger.error('telegram error')
+
 
 def main():
     """Start the bot."""
