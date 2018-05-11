@@ -144,10 +144,16 @@ def comandoTiempo(bot,update):
 def alerta(bot, job): #se puede combinar con tiempo
     logger.info(u'se está enviando la alerta')
     for user in collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}]}):
-        if user["alerta"] == 1:
-            tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],False)
-        elif user["alerta"] == 2:
-            tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],True)
+        try:
+            if user["alerta"] == 1:
+                tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],False)
+            elif user["alerta"] == 2:
+                tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],True)
+        except Unauthorized:
+            logger.info("ha pasado algo enviando la alerta")
+            collection.update_one({'_id':user["_id"]}, {"$set": {"activo": False}}, upsert=False)
+            logger.error('unauthorized %s',str(user["_id"]))
+
 
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     if "idMunicipio" not in user:
