@@ -67,6 +67,7 @@ def getUser(bot, update):
     if user is None:
         start(bot, update)
         user = collection.find_one({"_id":update.effective_chat.id})
+    collection.update_one({'_id':user["_id"]}, {"$set": {"activo": True}}, upsert=False)
     return user
 
 
@@ -345,7 +346,7 @@ def main():
     dp = updater.dispatcher
     jq = updater.job_queue
 
-    jq.run_daily(alerta,datetime.time(21))
+    jq.run_daily(alerta,datetime.time(22,32,40))
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
