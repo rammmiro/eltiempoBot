@@ -346,7 +346,7 @@ def main():
     dp = updater.dispatcher
     jq = updater.job_queue
 
-    jq.run_daily(alerta,datetime.time(22,32,40))
+    jq.run_daily(alerta,datetime.time(21))
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
