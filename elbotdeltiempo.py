@@ -49,7 +49,7 @@ def start(bot, update):
     else:
         collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": alertas["configurandoAlerta1"], "configurarAlerta": {"dias":[1]}, "tipo":update.message.chat.type, "titulo": update.message.chat.title}}, upsert=False)
     user = collection.find_one({"_id":update.effective_chat.id})
-    logger.info(u'nuevo usuario con id: ' + user["_id"] + u' se ha registrado')
+    logger.info(u'nuevo usuario con id: %s se ha registrado', str(user["_id"]))
     if "municipio" not in user:
         bot.send_message(chat_id=update.effective_chat.id,
             text=u'Para empezar tienes que decirme cuál es tu municipio. Hazlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
