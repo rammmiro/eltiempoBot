@@ -309,6 +309,7 @@ def error(bot, update, error):
         # remove update.message.chat_id from conversation list
         user = getUser(bot, update)
         collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": False}}, upsert=False)
+        logger.error('unauthorized %s',update.effective_chat.id)
     except BadRequest:
         # handle malformed requests - read more below!
         logger.error('bad request')
