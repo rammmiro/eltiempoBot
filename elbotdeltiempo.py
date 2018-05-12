@@ -40,7 +40,6 @@ collection = db.users
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
-    """Send a message when the command /start is issued."""
     update.message.reply_text(u'¡Hola! Soy @' + BOTNAME + u'.')
     if collection.find_one({"_id":update.effective_chat.id}) is None:
         collection.insert({"_id":update.effective_chat.id})
@@ -52,11 +51,11 @@ def start(bot, update):
     logger.info(u'nuevo usuario con id: %s se ha registrado', str(user["_id"]))
     if "municipio" not in user:
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'Para empezar tienes que decirme cuál es tu municipio. Hazlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
+            text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
     else:
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'Estoy configurado para enviarte información de *' + user["municipio"] + u'*. Puedes cambiarlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio ' + user["municipio"] +'`',
+            text=textoMunicipio(user["municipio"]),
             parse_mode=ParseMode.MARKDOWN)
     bot.send_message(chat_id=update.effective_chat.id,
         text=u'Para que te diga el tiempo envía /tiempo.\nPara acceder a todas las opciones pulsa /configuracion.\nPara tener más ayuda manda /ayuda.',
@@ -85,25 +84,31 @@ def left_chat_member(bot, update):
         stop(bot, update)
 
 def help(bot, update):
-    update.message.reply_text(u'Todavía estoy en beta! Pronto añadiré más ayuda.')
+    update.message.reply_text(u'Para que te diga el tiempo envía /tiempo.\nPara acceder a todas las opciones pulsa /configuracion.\nAhí podrás elegir si quieres recibir datos sobre el viento, la sensación térmica o la humedad relativa.\nTambién podrás seleccionar si quieres recibir el tiempo para mañana, para varios días o por horas.\nY finalmente si activas la "alerta" cada día a las 21:00 te enviaré información sobre el tiempo del sía siguiente. Si escoges como opción "solo lluvia" lo haré sólo si va a llover, para que recuerdes que tienes que coger el paraguas.')
+
+def textoMunicipio(municipio):
+    if municipio is not None:
+        return u'Estoy configurado para enviarte información de *' municipio + u'*. Puedes cambiarlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio ' municipio +'`'
+    else:
+        return u'Tienes que decirme cuál es tu municipio. Hazlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`'
 
 def municipio(bot, update):
     user = getUser(bot, update)
     if update.message.text == "/municipio":
         if "municipio" in user:
             bot.send_message(chat_id=update.effective_chat.id,
-                text=u'Estoy configurado para enviarte información de *' + user["municipio"] + u'*. Puedes cambiarlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio ' + user["municipio"] +'`',
+                text=textoMunicipio(user["municipio"]),
                 parse_mode=ParseMode.MARKDOWN)
         else:
             bot.send_message(chat_id=update.effective_chat.id,
-                text=u'Envia el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
+                text=textoMunicipio(None),
                 parse_mode=ParseMode.MARKDOWN)
         return
     geocode_result = gmaps.geocode(update.message.text[update.message.text.index(' ') + 1:])
     if not geocode_result:
         logger.warning(u'El usuario %s ha buscado el municipio %s, que no existe.', str(user["_id"]),update.message.text[update.message.text.index(' ') + 1:])
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'¿Estás seguro de que has escrito bien el nombre de tu municipio? Envia el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
+            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
     reverse_geocode_result = gmaps.reverse_geocode((geocode_result[0]["geometry"]["location"]["lat"], geocode_result[0]["geometry"]["location"]["lng"]))
@@ -112,12 +117,12 @@ def municipio(bot, update):
     except StopIteration:
         logger.warning(u'stop iteration: sin país')
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'¿Estás seguro de que has escrito bien el nombre de tu municipio? Envia el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
+            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
     if pais != 'ES':
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'Solo conozco el tiempo de municipios españoles, lo siento.',
+            text=u'Solo conozco el tiempo de municipios españoles, lo siento. Si quieres recibir el tiempo de una localidad española comprueba que la hayas escrito bien.\n' + textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         logger.warning(u'Ubicación en: %s',pais)
     else:
@@ -135,7 +140,7 @@ def municipio(bot, update):
             except StopIteration:
                 logger.warning('stop iteration')
                 bot.send_message(chat_id=update.effective_chat.id,
-                    text=u'¿Estás seguro de que has escrito bien el nombre de tu municipio? Envia el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`',
+                    text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
                     parse_mode=ParseMode.MARKDOWN)
                 continue
 def comandoTiempo(bot,update):
@@ -146,9 +151,9 @@ def alerta(bot, job): #se puede combinar con tiempo
     logger.info(u'se está enviando la alerta')
     for user in collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}]}):
         try:
-            if user["alerta"] == 1:
+            if user["alerta"] == 1 and "idMunicipio" in user:
                 tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],False)
-            elif user["alerta"] == 2:
+            elif user["alerta"] == 2 and "idMunicipio" in user:
                 tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],True)
         except Unauthorized:
             logger.info("ha pasado algo enviando la alerta")
@@ -159,7 +164,7 @@ def alerta(bot, job): #se puede combinar con tiempo
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     if "idMunicipio" not in user:
         bot.send_message(chat_id=user["_id"],
-            text=u"Primero tienes que decirme tu municipio con `/municipio`. Por ejemplo:\n`/municipio Soria`",
+            text=textMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
     treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
@@ -259,7 +264,7 @@ def configuracionMenu(bot, update):
                     [InlineKeyboardButton(u"Mañana (cada 2 horas)", callback_data='configurandoPrediccionMANYANA2H')],
                     [InlineKeyboardButton(u"Hoy y Mañana (cada 2 h)", callback_data='configurandoPrediccionHOYMANYANA2H')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        bot.edit_message_text(text=u"Configura la predicción",
+        bot.edit_message_text(text=u"Configura la predicción:",
                               chat_id=query.message.chat_id,
                               message_id=query.message.message_id,
                               reply_markup=reply_markup)
@@ -279,7 +284,7 @@ def configuracionMenu(bot, update):
                      InlineKeyboardButton(u"7 días", callback_data='configurandoAlerta6')],
                     [InlineKeyboardButton(u"Mañana (cada 2 horas)", callback_data='configurandoAlertaMANYANA2H')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        bot.edit_message_text(text="Configura la alerta",
+        bot.edit_message_text(text="Configura la alerta:",
                               chat_id=query.message.chat_id,
                               message_id=query.message.message_id,
                               reply_markup=reply_markup)
