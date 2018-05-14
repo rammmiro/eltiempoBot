@@ -20,6 +20,7 @@ import urllib
 import urllib2
 import xml.etree.ElementTree as etree
 import datetime
+import time
 from pymongo import MongoClient
 import subprocess
 import os
@@ -150,15 +151,21 @@ def comandoTiempo(bot,update):
 def alerta(bot, job):
     logger.info(u'se está enviando la alerta')
     for user in collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}]}):
+        time.sleep(5)
         try:
             if user["alerta"] == 1 and "idMunicipio" in user:
                 tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],False)
             elif user["alerta"] == 2 and "idMunicipio" in user:
                 tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],True)
         except Unauthorized:
-            logger.info("ha pasado algo enviando la alerta")
+            logger.warning(u"ha pasado algo enviando la alerta")
             collection.update_one({'_id':user["_id"]}, {"$set": {"activo": False}}, upsert=False)
             logger.error('unauthorized %s',str(user["_id"]))
+        except TimedOut:
+            logger.error('timedOut %s',str(user["_id"]))
+        except TelegramError:
+            # handle all other telegram related errors
+            logger.error('telegram error %s', str(user["_id"]))
 
 
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
@@ -351,7 +358,7 @@ def main():
     dp = updater.dispatcher
     jq = updater.job_queue
 
-    jq.run_daily(alerta,datetime.time(21))
+    jq.run_daily(alerta,datetime.time(21,10))
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
