@@ -104,7 +104,7 @@ def municipio(bot, update):
                 text=textoMunicipio(None),
                 parse_mode=ParseMode.MARKDOWN)
         return
-    geocode_result = gmaps.geocode(update.message.text[update.message.text.index(' ') + 1:])
+    geocode_result = gmaps.geocode(address=update.message.text[update.message.text.index(' ') + 1:],components={"country":"ES"})
     if not geocode_result:
         logger.warning(u'El usuario %s ha buscado el municipio %s, que no existe.', str(user["_id"]),update.message.text[update.message.text.index(' ') + 1:])
         bot.send_message(chat_id=update.effective_chat.id,
