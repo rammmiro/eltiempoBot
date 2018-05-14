@@ -88,7 +88,7 @@ def help(bot, update):
 
 def textoMunicipio(municipio):
     if municipio is not None:
-        return u'Estoy configurado para enviarte información de *' municipio + u'*. Puedes cambiarlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio ' municipio +'`'
+        return u'Estoy configurado para enviarte información de *' + municipio + u'*. Puedes cambiarlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio ' + municipio +'`'
     else:
         return u'Tienes que decirme cuál es tu municipio. Hazlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`'
 
@@ -318,7 +318,7 @@ def error(bot, update, error):
     try:
         raise error
     except Unauthorized:
-        # remove update.effective_chat_id from conversation list
+        # remove update.effective_chat.id from conversation list
         user = getUser(bot, update)
         collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": False}}, upsert=False)
         logger.error('unauthorized %s',update.effective_chat.id)
