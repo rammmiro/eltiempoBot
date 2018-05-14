@@ -133,7 +133,7 @@ def municipio(bot, update):
                 codigoMunicipio = municipios[nombre.decode('utf-8').lower().encode('utf-8')]
                 collection.update_one({'_id':update.effective_chat.id}, {"$set": {"municipio": nombre, "idMunicipio": codigoMunicipio}}, upsert=False)
                 bot.send_message(chat_id=update.effective_chat.id,
-                    text=u'¡Municipio actualizado! 🌍\nAhora cuando me envíes el comando /tiempo te responderé con la predicción para *' + nombre.encode('utf-8') + '*.',
+                    text=u'¡Municipio actualizado! 🌍\nAhora cuando me envíes el comando /tiempo te responderé con la predicción para *' + unicode(nombre, "utf-8") + '*.',
                     parse_mode=ParseMode.MARKDOWN)
                 logger.info(u'%s ha cambiado su ubicación a %s (%s)',str(user["_id"]),nombre,str(codigoMunicipio).decode('utf-8'))
                 return
