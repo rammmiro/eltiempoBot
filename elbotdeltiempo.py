@@ -43,10 +43,10 @@ def start(bot, update):
     update.message.reply_text(u'¡Hola! Soy @' + BOTNAME + u'.')
     if collection.find_one({"_id":update.effective_chat.id}) is None:
         collection.insert({"_id":update.effective_chat.id})
-    if update.message.chat.type == "private":
-        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["configurandoAlerta1"], "tipo":update.message.chat.type, "nombre": update.message.chat.first_name, "alias": update.message.chat.username}}, upsert=False)
+    if update.effective_chat.type == "private":
+        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["configurandoAlerta1"], "tipo":update.effective_chat.type, "nombre": update.effective_chat.first_name, "alias": update.effective_chat.username}}, upsert=False)
     else:
-        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": alertas["configurandoAlerta1"], "configurarAlerta": {"dias":[1]}, "tipo":update.message.chat.type, "titulo": update.message.chat.title}}, upsert=False)
+        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": alertas["configurandoAlerta1"], "configurarAlerta": {"dias":[1]}, "tipo":update.effective_chat.type, "titulo": update.effective_chat.title}}, upsert=False)
     user = collection.find_one({"_id":update.effective_chat.id})
     logger.info(u'nuevo usuario con id: %s se ha registrado', str(user["_id"]))
     if "municipio" not in user:
@@ -318,7 +318,7 @@ def error(bot, update, error):
     try:
         raise error
     except Unauthorized:
-        # remove update.message.chat_id from conversation list
+        # remove update.effective_chat_id from conversation list
         user = getUser(bot, update)
         collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": False}}, upsert=False)
         logger.error('unauthorized %s',update.effective_chat.id)
