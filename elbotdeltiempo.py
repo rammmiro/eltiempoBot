@@ -133,7 +133,7 @@ def municipio(bot, update):
                 codigoMunicipio = municipios[nombre.decode('utf-8').lower().encode('utf-8')]
                 collection.update_one({'_id':update.effective_chat.id}, {"$set": {"municipio": nombre, "idMunicipio": codigoMunicipio}}, upsert=False)
                 bot.send_message(chat_id=update.effective_chat.id,
-                    text=u'¡Municipio actualizado! 🌍\nAhora cuando me envíes el comando /tiempo te responderé con la predicción para *' + nombre + '*.',
+                    text=u'¡Municipio actualizado! 🌍\nAhora cuando me envíes el comando /tiempo te responderé con la predicción para *' + nombre.encode('utf-8') + '*.',
                     parse_mode=ParseMode.MARKDOWN)
                 logger.info(u'%s ha cambiado su ubicación a %s (%s)',str(user["_id"]),nombre,str(codigoMunicipio).decode('utf-8'))
                 return
@@ -147,7 +147,7 @@ def comandoTiempo(bot,update):
     user = getUser(bot, update)
     tiempo(bot,user,user["configurarTiempo"]["dias"],user["configurarTiempo"]["horas"]["hoy"],user["configurarTiempo"]["horas"]["manyana"],False)
 
-def alerta(bot, job): #se puede combinar con tiempo
+def alerta(bot, job):
     logger.info(u'se está enviando la alerta')
     for user in collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}]}):
         try:
@@ -164,7 +164,7 @@ def alerta(bot, job): #se puede combinar con tiempo
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     if "idMunicipio" not in user:
         bot.send_message(chat_id=user["_id"],
-            text=textMunicipio(None),
+            text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
     treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
