@@ -108,7 +108,7 @@ def municipio(bot, update):
     if not geocode_result:
         logger.warning(u'El usuario %s ha buscado el municipio %s, que no existe.', str(user["_id"]),update.message.text[update.message.text.index(' ') + 1:])
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
+            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\nPrueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
         return
     reverse_geocode_result = gmaps.reverse_geocode((geocode_result[0]["geometry"]["location"]["lat"], geocode_result[0]["geometry"]["location"]["lng"]))
@@ -117,7 +117,7 @@ def municipio(bot, update):
     except StopIteration:
         logger.warning(u'stop iteration: sin país, %s ha escrito: %s', str(update.effective_chat.id), update.message.text)
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
+            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\nPrueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
         return
     if pais != 'ES':
@@ -141,7 +141,7 @@ def municipio(bot, update):
                 logger.warning('stop iteration, %s ha escrito: %s',str(update.effective_chat.id), update.message.text)
                 continue
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
+            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\nPrueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
 def comandoTiempo(bot,update):
     user = getUser(bot, update)
