@@ -115,16 +115,16 @@ def municipio(bot, update):
     try:
         pais = next((item for item in reverse_geocode_result[0]['address_components'] if item['types'][0] == 'country'),None)['short_name']
     except StopIteration:
-        logger.warning(u'stop iteration: sin país, ha escrito: %s', update.message.text)
+        logger.warning(u'stop iteration: sin país, %s ha escrito: %s', str(update.effective_chat.id), update.message.text)
         bot.send_message(chat_id=update.effective_chat.id,
             text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
     if pais != 'ES':
         bot.send_message(chat_id=update.effective_chat.id,
-            text=u'Solo conozco el tiempo de municipios españoles, lo siento. Si quieres recibir el tiempo de una localidad española comprueba que la hayas escrito bien.\n' + textoMunicipio(None),
+            text=u'Solo conozco el tiempo de municipios españoles, lo siento. Si quieres recibir el tiempo de una localidad española comprueba que la hayas escrito bien.\nQuizás hay otro lugar en el mundo que se llama igual, prueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
-        logger.warning(u'Ubicación en: %s, ha escrito: %s',pais, update.message.text)
+        logger.warning(u'Ubicación en: %s, %s ha escrito: %s',pais,str(update.effective_chat.id), update.message.text)
     else:
         for direccion in reverse_geocode_result:
             try:
@@ -138,7 +138,7 @@ def municipio(bot, update):
                 logger.info(u'%s ha cambiado su ubicación a %s (%s)',str(user["_id"]),unicode(nombre, "utf-8"),str(codigoMunicipio).decode('utf-8'))
                 return
             except StopIteration:
-                logger.warning('stop iteration, ha escrito: %s', update.message.text)
+                logger.warning('stop iteration, %s ha escrito: %s',str(update.effective_chat.id), update.message.text)
                 bot.send_message(chat_id=update.effective_chat.id,
                     text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
                     parse_mode=ParseMode.MARKDOWN)
