@@ -140,9 +140,9 @@ def municipio(bot, update):
             except StopIteration:
                 logger.warning('stop iteration, %s ha escrito: %s',str(update.effective_chat.id), update.message.text)
                 continue
-            bot.send_message(chat_id=update.effective_chat.id,
-                text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
-                parse_mode=ParseMode.MARKDOWN)
+        bot.send_message(chat_id=update.effective_chat.id,
+            text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\n' + textoMunicipio(None),
+            parse_mode=ParseMode.MARKDOWN)
 def comandoTiempo(bot,update):
     user = getUser(bot, update)
     tiempo(bot,user,user["configurarTiempo"]["dias"],user["configurarTiempo"]["horas"]["hoy"],user["configurarTiempo"]["horas"]["manyana"],False)
