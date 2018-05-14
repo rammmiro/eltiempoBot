@@ -135,7 +135,7 @@ def municipio(bot, update):
                 bot.send_message(chat_id=update.effective_chat.id,
                     text=u'¡Municipio actualizado! 🌍\nAhora cuando me envíes el comando /tiempo te responderé con la predicción para *' + unicode(nombre, "utf-8") + '*.',
                     parse_mode=ParseMode.MARKDOWN)
-                logger.info(u'%s ha cambiado su ubicación a %s (%s)',str(user["_id"]),nombre,str(codigoMunicipio).decode('utf-8'))
+                logger.info(u'%s ha cambiado su ubicación a %s (%s)',str(user["_id"]),unicode(nombre, "utf-8"),str(codigoMunicipio).decode('utf-8'))
                 return
             except StopIteration:
                 logger.warning('stop iteration')
