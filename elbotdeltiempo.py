@@ -84,7 +84,7 @@ def left_chat_member(bot, update):
         stop(bot, update)
 
 def help(bot, update):
-    update.message.reply_text(u'Para que te diga el tiempo envía /tiempo.\nPara acceder a todas las opciones pulsa /configuracion.\nAhí podrás elegir si quieres recibir datos sobre el viento, la sensación térmica o la humedad relativa.\nTambién podrás seleccionar si quieres recibir el tiempo para mañana, para varios días o por horas.\nY finalmente si activas la "alerta" cada día a las 21:00 te enviaré información sobre el tiempo del sía siguiente. Si escoges como opción "solo lluvia" lo haré sólo si va a llover, para que recuerdes que tienes que coger el paraguas.')
+    update.message.reply_text(u'Para que te diga el *tiempo* envía /tiempo.\n\nPara acceder a todas las opciones pulsa /configuracion.\nAhí podrás elegir si quieres recibir datos sobre el _viento_, la _sensación térmica_ o la _humedad relativa_.\n\nTambién podrás seleccionar si quieres recibir el tiempo para mañana, para varios días o por horas.\n\nY finalmente si activas la _alerta_ cada día a las 21:00 te enviaré información sobre el tiempo del día siguiente. Si escoges como opción _solo lluvia_ lo haré sólo si va a llover, para que recuerdes que tienes que coger el paraguas.')
 
 def textoMunicipio(municipio):
     if municipio is not None:
