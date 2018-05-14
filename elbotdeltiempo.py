@@ -150,12 +150,12 @@ def comandoTiempo(bot,update):
 
 def alerta(bot, job):
     logger.info(u'se está enviando la alerta')
-    for user in collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}]}):
+    for user in collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}, {"idMunicipio":{"$exists":True}}]}):
         time.sleep(0.1)
         try:
-            if user["alerta"] == 1 and "idMunicipio" in user:
+            if user["alerta"] == 1:
                 tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],False)
-            elif user["alerta"] == 2 and "idMunicipio" in user:
+            elif user["alerta"] == 2:
                 tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],True)
         except Unauthorized:
             logger.warning(u"ha pasado algo enviando la alerta")
@@ -166,6 +166,12 @@ def alerta(bot, job):
         except TelegramError:
             # handle all other telegram related errors
             logger.error('telegram error %s', str(user["_id"]))
+    #estadisticas al admin
+    user = collection.find_one({"alias":ADMIN})
+    bot.send_message(chat_id=user["_id"], text=u'#usuariosTotales ' + str(collection.find().count()))
+    bot.send_message(chat_id=user["_id"], text=u'#usuariosLocalizados ' + str(collection.find({"idMunicipio":{"$exists":True}}).count()))
+    bot.send_message(chat_id=user["_id"], text=u'#usuariosLocalizadosActivos ' + str(collection.find({"$and":[{"activo": True}, {"idMunicipio":{"$exists":True}}]}).count()))
+    bot.send_message(chat_id=user["_id"], text=u'#usuariosSuscritos ' + str(collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}, {"idMunicipio":{"$exists":True}}]}).count()))
 
 
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
@@ -358,7 +364,7 @@ def main():
     dp = updater.dispatcher
     jq = updater.job_queue
 
-    jq.run_daily(alerta,datetime.time(21,10))
+    jq.run_daily(alerta,datetime.time(21))
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
