@@ -47,7 +47,7 @@ def start(bot, update):
     if update.effective_chat.type == "private":
         collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["configurandoAlerta1"], "tipo":update.effective_chat.type, "nombre": update.effective_chat.first_name, "alias": update.effective_chat.username}}, upsert=False)
     else:
-        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": alertas["configurandoAlerta1"], "configurarAlerta": {"dias":[1]}, "tipo":update.effective_chat.type, "titulo": update.effective_chat.title}}, upsert=False)
+        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["configurandoAlerta1"], "tipo":update.effective_chat.type, "titulo": update.effective_chat.title}}, upsert=False)
     user = collection.find_one({"_id":update.effective_chat.id})
     logger.info(u'nuevo usuario con id: %s se ha registrado', str(user["_id"]))
     if "municipio" not in user:
