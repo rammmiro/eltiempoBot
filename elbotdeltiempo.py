@@ -173,6 +173,10 @@ def alerta(bot, job):
     bot.send_message(chat_id=user["_id"], text=u'#usuariosLocalizadosActivos ' + str(collection.find({"$and":[{"activo": True}, {"idMunicipio":{"$exists":True}}]}).count()))
     bot.send_message(chat_id=user["_id"], text=u'#usuariosSuscritos ' + str(collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}, {"idMunicipio":{"$exists":True}}]}).count()))
 
+def bugFix(bot,job):
+    #logger.info(u'se está intentando solucionar el error')
+    pass
+
 
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     if "idMunicipio" not in user:
@@ -365,6 +369,7 @@ def main():
     jq = updater.job_queue
 
     jq.run_daily(alerta,datetime.time(21))
+    #jq.run_once(bugFix,60)
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
