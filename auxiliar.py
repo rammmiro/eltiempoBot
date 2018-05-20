@@ -84,21 +84,21 @@ num_emoji[u'🔟'] = 10
 active_emoji = {True: u'✅', False: u'❌'}
 alerta_text = {0: u'🔕 No molestar', 1: u'🔔 Alerta', 2: u'☔️ Solo lluvia'}
 predicciones = {
-    "configurandoPrediccion1": {"dias": range(1), "horas": {"hoy": [], "manyana": []}},
-    "configurandoPrediccion2": {"dias": range(2), "horas": {"hoy": [], "manyana": []}},
-    "configurandoPrediccion3": {"dias": range(3), "horas": {"hoy": [], "manyana": []}},
-    "configurandoPrediccion7": {"dias": range(7), "horas": {"hoy": [], "manyana": []}},
-    "configurandoPrediccionHOY2H": {"dias": [], "horas": {"hoy": range(0,24,2), "manyana": []}},
-    "configurandoPrediccionMANYANA2H": {"dias": [], "horas": {"hoy": [], "manyana": range(8,24,2)}},
-    "configurandoPrediccionHOYMANYANA2H": {"dias": [], "horas": {"hoy": range(0,24,2), "manyana": range(0,24,2)}}
+    "1": {"dias": range(1), "horas": {"hoy": [], "manyana": []}},
+    "2": {"dias": range(2), "horas": {"hoy": [], "manyana": []}},
+    "3": {"dias": range(3), "horas": {"hoy": [], "manyana": []}},
+    "7": {"dias": range(7), "horas": {"hoy": [], "manyana": []}},
+    "HOY2H": {"dias": [], "horas": {"hoy": range(0,24,2), "manyana": []}},
+    "MANYANA2H": {"dias": [], "horas": {"hoy": [], "manyana": range(8,24,2)}},
+    "HOYMANYANA2H": {"dias": [], "horas": {"hoy": range(0,24,2), "manyana": range(0,24,2)}}
     }
 
 alertas = {
-    "configurandoAlerta1": {"dias": range(1,2), "horas": {"hoy": [], "manyana": []}},
-    "configurandoAlerta2": {"dias": range(1,3), "horas": {"hoy": [], "manyana": []}},
-    "configurandoAlerta3": {"dias": range(1,4), "horas": {"hoy": [], "manyana": []}},
-    "configurandoAlerta6": {"dias": range(1,7), "horas": {"hoy": [], "manyana": []}},
-    "configurandoAlertaMANYANA2H": {"dias": [], "horas": {"hoy": [], "manyana": range(8,24,2)}}
+    "1": {"dias": range(1,2), "horas": {"hoy": [], "manyana": []}},
+    "2": {"dias": range(1,3), "horas": {"hoy": [], "manyana": []}},
+    "3": {"dias": range(1,4), "horas": {"hoy": [], "manyana": []}},
+    "6": {"dias": range(1,7), "horas": {"hoy": [], "manyana": []}},
+    "MANYANA2H": {"dias": [], "horas": {"hoy": [], "manyana": range(8,24,2)}}
     }
 
 dia_semana = [u'lun',u'mar',u'mié',u'jue',u'vie',u'sáb',u'dom']

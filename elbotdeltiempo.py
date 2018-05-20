@@ -45,9 +45,9 @@ def start(bot, update):
     if collection.find_one({"_id":update.effective_chat.id}) is None:
         collection.insert({"_id":update.effective_chat.id})
     if update.effective_chat.type == "private":
-        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["configurandoAlerta1"], "tipo":update.effective_chat.type, "nombre": update.effective_chat.first_name, "alias": update.effective_chat.username}}, upsert=False)
+        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["1"], "tipo":update.effective_chat.type, "nombre": update.effective_chat.first_name, "alias": update.effective_chat.username}}, upsert=False)
     else:
-        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["configurandoPrediccion3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["configurandoAlerta1"], "tipo":update.effective_chat.type, "titulo": update.effective_chat.title}}, upsert=False)
+        collection.update_one({'_id':update.effective_chat.id}, {"$set": {"activo": True, "configurarTiempo": predicciones["3"], "viento": True, "sensacionTermica": True, "humedadRelativa": True, "alerta": 1, "configurarAlerta": alertas["1"], "tipo":update.effective_chat.type, "titulo": update.effective_chat.title}}, upsert=False)
     user = collection.find_one({"_id":update.effective_chat.id})
     logger.info(u'nuevo usuario con id: %s se ha registrado', str(user["_id"]))
     if "municipio" not in user:
@@ -147,6 +147,20 @@ def municipio(bot, update):
 def comandoTiempo(bot,update):
     user = getUser(bot, update)
     tiempo(bot,user,user["configurarTiempo"]["dias"],user["configurarTiempo"]["horas"]["hoy"],user["configurarTiempo"]["horas"]["manyana"],False)
+
+def comandoTiempoMenu(bot,update):
+    keyboard = [[InlineKeyboardButton(u"1 día", callback_data='tiempoMenu1'),
+                 InlineKeyboardButton(u"2 días", callback_data='tiempoMenu2')],
+                [InlineKeyboardButton(u"3 días", callback_data='tiempoMenu3'),
+                 InlineKeyboardButton(u"7 días", callback_data='tiempoMenu7')],
+                [InlineKeyboardButton(u"Hoy (cada 2 horas)", callback_data='tiempoMenuHOY2H')],
+                [InlineKeyboardButton(u"Mañana (cada 2 horas)", callback_data='tiempoMenuMANYANA2H')],
+                [InlineKeyboardButton(u"Hoy y Mañana (cada 2 h)", callback_data='tiempoMenuHOYMANYANA2H')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    bot.send_message(text=u"Elige la predicción:",
+                          chat_id=update.effective_chat.id,
+                          reply_markup=reply_markup)
+    return
 
 def alerta(bot, job):
     logger.info(u'se está enviando la alerta')
@@ -272,6 +286,11 @@ def crearTecladoConfigurar(user):
 def configuracionMenu(bot, update):
     query = update.callback_query
     user = collection.find_one({"_id":query["message"]["chat"]["id"]})
+    if query["data"].startswith("tiempoMenu"):
+        bot.delete_message(chat_id=query.message.chat_id,message_id=query.message.message_id)
+        prediccion = predicciones[query["data"][len("tiempoMenu"):]]
+        tiempo(bot,user,prediccionDias = prediccion["dias"],prediccionHoy = prediccion["horas"]["hoy"],prediccionManyana = prediccion["horas"]["manyana"],soloLluvia=False)
+        return
     if query["data"] == "configurarPrediccion":
         keyboard = [[InlineKeyboardButton(u"1 día", callback_data='configurandoPrediccion1'),
                      InlineKeyboardButton(u"2 días", callback_data='configurandoPrediccion2')],
@@ -287,7 +306,7 @@ def configuracionMenu(bot, update):
                               reply_markup=reply_markup)
         return
     if query["data"].startswith("configurandoPrediccion"):
-        user["configurarTiempo"] = predicciones[query["data"]]
+        user["configurarTiempo"] = predicciones[query["data"][len("configurandoPrediccion"):]]
         collection.update_one({'_id':user["_id"]}, {"$set": {"configurarTiempo": user["configurarTiempo"]}}, upsert=False)
         bot.edit_message_text(text=u"Configuración:",
                               chat_id=query.message.chat_id,
@@ -307,7 +326,7 @@ def configuracionMenu(bot, update):
                               reply_markup=reply_markup)
         return
     if query["data"].startswith("configurandoAlerta"):
-        user["configurarAlerta"] = alertas[query["data"]]
+        user["configurarAlerta"] = alertas[query["data"][len("configurandoAlerta"):]]
         collection.update_one({'_id':user["_id"]}, {"$set": {"configurarAlerta": user["configurarAlerta"]}}, upsert=False)
         bot.edit_message_text(text=u"Configuración:",
                               chat_id=query.message.chat_id,
@@ -378,8 +397,12 @@ def main():
     dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, left_chat_member))
     dp.add_handler(CommandHandler("ayuda", help))
     dp.add_handler(CommandHandler("tiempo", comandoTiempo))
+    dp.add_handler(CommandHandler("tiempoMenu", comandoTiempoMenu))
+    dp.add_handler(CommandHandler(u"tiempoMenú", comandoTiempoMenu))
     dp.add_handler(CommandHandler("municipio", municipio))
     dp.add_handler(CommandHandler("configurar", configurar))
+    dp.add_handler(CommandHandler("configuracion", configurar))
+    dp.add_handler(CommandHandler(u"configuración", configurar))
 
     dp.add_handler(CallbackQueryHandler(configuracionMenu))
 
