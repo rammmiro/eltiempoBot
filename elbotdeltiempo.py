@@ -12,7 +12,7 @@ La información metereológica que muestra El Bot del Tiempo ha sido elaborada p
 """
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
-from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup, ChatAction
 from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, ChatMigrated, NetworkError)
 import googlemaps
 import logging
@@ -41,6 +41,7 @@ collection = db.users
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
+    bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     update.message.reply_text(u'¡Hola! Soy @' + BOTNAME + u'.')
     if collection.find_one({"_id":update.effective_chat.id}) is None:
         collection.insert({"_id":update.effective_chat.id})
@@ -85,6 +86,7 @@ def left_chat_member(bot, update):
         stop(bot, update)
 
 def help(bot, update):
+    bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     update.message.reply_text(text=u'Para que te diga el *tiempo* envía /tiempo.\n\nPara acceder a todas las opciones pulsa /configurar.\nAhí podrás elegir si quieres recibir datos sobre el _viento_, la _sensación térmica_ o la _humedad relativa_.\n\nTambién podrás seleccionar si quieres recibir el tiempo para mañana, para varios días o por horas.\n\nY finalmente si activas la _alerta_ cada día a las 21:00 te enviaré información sobre el tiempo del día siguiente. Si escoges como opción _solo lluvia_ lo haré sólo si va a llover, para que recuerdes que tienes que coger el paraguas.',parse_mode=ParseMode.MARKDOWN)
 
 def textoMunicipio(municipio):
@@ -94,6 +96,7 @@ def textoMunicipio(municipio):
         return u'Tienes que decirme cuál es tu municipio. Hazlo enviando el comando `/municipio` seguido del nombre. Así:\n`/municipio Soria`'
 
 def municipio(bot, update):
+    bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.FIND_LOCATION)
     user = getUser(bot, update)
     if update.message.text == "/municipio":
         if "municipio" in user:
@@ -145,10 +148,12 @@ def municipio(bot, update):
             text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\nPrueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
 def comandoTiempo(bot,update):
+    bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     user = getUser(bot, update)
     tiempo(bot,user,user["configurarTiempo"]["dias"],user["configurarTiempo"]["horas"]["hoy"],user["configurarTiempo"]["horas"]["manyana"],False)
 
 def comandoTiempoMenu(bot,update):
+    bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     keyboard = [[InlineKeyboardButton(u"1 día", callback_data='tiempoMenu1'),
                  InlineKeyboardButton(u"2 días", callback_data='tiempoMenu2')],
                 [InlineKeyboardButton(u"3 días", callback_data='tiempoMenu3'),
@@ -270,6 +275,7 @@ def prediccionHora(dia,hora,user):
     return prediccion
 
 def configurar(bot, update):
+    bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     user = getUser(bot, update)
     logger.info(u'el usuario %s quiere configurar', str(user["_id"]))
     update.message.reply_text(u'Configuración:', reply_markup=crearTecladoConfigurar(user))
