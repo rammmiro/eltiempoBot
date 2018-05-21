@@ -402,7 +402,7 @@ def mapaRegional(bot,update):
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
             draw.text((2,20),"@"+BOTNAME,fill="white",font=font)
-            img.paste(logo,(428,52))
+            img.paste(logo,(428,2))
             images.append(numpy.array(img))
             del img
         except urllib2.HTTPError:
