@@ -374,7 +374,7 @@ def mapa(bot,update):
             img = Image.open(StringIO(urllib2.urlopen(url).read()))
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
-            draw.text((2,2),"@"+BOTNAME,fill="blue",font=font)
+            draw.text((2,2),"@"+BOTNAME,fill="white",font=font)
             img.paste(logo,(2,399))
             images.append(numpy.array(img))
             del img
@@ -401,8 +401,8 @@ def mapaRegional(bot,update):
             img = Image.open(StringIO(urllib2.urlopen(url).read()))
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
-            draw.text((2,2),"@"+BOTNAME,fill="blue",font=font)
-            img.paste(logo,(2,399))
+            draw.text((2,20),"@"+BOTNAME,fill="white",font=font)
+            img.paste(logo,(428,52))
             images.append(numpy.array(img))
             del img
         except urllib2.HTTPError:
