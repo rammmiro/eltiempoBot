@@ -364,7 +364,7 @@ def mapa(bot,update):
     logger.info(u'tarea')
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=hora.minute % 30)
-    font = ImageFont.truetype("OpenSans.ttf",14)
+    font = ImageFont.truetype("OpenSans.ttf",20)
     logo = Image.open('minilogo.png')
     images = []
     for i in range(23,0,-1):
