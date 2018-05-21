@@ -27,6 +27,12 @@ import os
 from municipios import municipios
 from auxiliar import estados_cielo, direccion_viento, num_emoji, active_emoji, alerta_text, dia_semana, predicciones, alertas
 from config import TELEGRAMTOKEN, GOOGLEMAPSKEY, BOTNAME, ADMIN
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+from StringIO import StringIO
+import imageio
+import numpy
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename='./logs/'+datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+'.log', filemode='w',level=logging.INFO)
