@@ -354,6 +354,32 @@ def cambiarConfiguracion(bot,user,opcion,query):
     query.edit_message_reply_markup(reply_markup=crearTecladoConfigurar(user))
     return
 
+def mapa(bot,update):
+    logger.info(u'tarea')
+    hora = datetime.datetime.utcnow()
+    hora = hora - datetime.timedelta(minutes=hora.minute % 30)
+    font = ImageFont.truetype("OpenSans.ttf",14)
+    logo = Image.open('minilogo.png')
+    images = []
+    for i in range(23,0,-1):
+        url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8pb.gif'
+        try:
+            img = Image.open(StringIO(urllib2.urlopen(url).read()))
+            img = img.convert('RGB')
+            draw = ImageDraw.Draw(img)
+            draw.text((2,2),"@"+BOTNAME,fill="white",font=font)
+            img.paste(logo,(2,399))
+            images.append(numpy.array(img))
+            del img
+        except urllib2.HTTPError:
+            continue
+    output = StringIO()
+    imageio.mimsave(output,images,format = "gif", duration = 0.5)
+    output.seek(0)
+    bot.send_document(chat_id=update.effective_chat.id, document=output)
+    output.close()
+
+
 def error(bot, update, error):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, error)
@@ -409,6 +435,7 @@ def main():
     dp.add_handler(CommandHandler("configurar", configurar))
     dp.add_handler(CommandHandler("configuracion", configurar))
     dp.add_handler(CommandHandler(u"configuración", configurar))
+    dp.add_handler(CommandHandler(u"mapa", mapa))
 
     dp.add_handler(CallbackQueryHandler(configuracionMenu))
 
