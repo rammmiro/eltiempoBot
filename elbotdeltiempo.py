@@ -390,7 +390,11 @@ def mapaRegional(bot,update):
     logger.info(u'el usuario %s quiere un mapa',str(update.effective_chat.id))
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
     hora = datetime.datetime.utcnow()
+<<<<<<< HEAD
     hora = hora - datetime.timedelta(minutes=(((hora.minute - 10) % 30) + 10))
+=======
+    hora = hora - datetime.timedelta(((minutes=hora.minute - 10) % 30) + 10)
+>>>>>>> 82e3a324ba1690a5bec9ed357f1eac1d61363fbc
     font = ImageFont.truetype("OpenSans.ttf",20)
     logo = Image.open('minilogo.png')
     images = []
