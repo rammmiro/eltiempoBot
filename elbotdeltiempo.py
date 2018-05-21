@@ -25,7 +25,7 @@ from pymongo import MongoClient
 import subprocess
 import os
 from municipios import municipios
-from auxiliar import estados_cielo, direccion_viento, num_emoji, active_emoji, alerta_text, dia_semana, predicciones, alertas
+from auxiliar import estados_cielo, direccion_viento, num_emoji, active_emoji, alerta_text, dia_semana, predicciones, alertas, mapaCodigo
 from config import TELEGRAMTOKEN, GOOGLEMAPSKEY, BOTNAME, ADMIN
 from PIL import Image
 from PIL import ImageDraw
@@ -387,7 +387,8 @@ def mapa(bot,update):
     output.close()
 
 def mapaRegional(bot,update):
-    logger.info(u'el usuario %s quiere un mapa',str(update.effective_chat.id))
+    user = getUser(bot, update)
+    logger.info(u'el usuario %s quiere un mapa regional',str(update.effective_chat.id))
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=(((hora.minute - 10) % 30) + 10))
@@ -395,7 +396,7 @@ def mapaRegional(bot,update):
     logo = Image.open('minilogo.png')
     images = []
     for i in range(23,0,-1):
-        url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8ba.gif'
+        url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8' + mapaCodigo[user["idMunicipio"][:2]] + u'.gif'
         try:
             img = Image.open(StringIO(urllib2.urlopen(url).read()))
             img = img.convert('RGB')
