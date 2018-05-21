@@ -361,6 +361,9 @@ def cambiarConfiguracion(bot,user,opcion,query):
     return
 
 def mapa(bot,update):
+    if update.message.text.lower() == "/mapa regional":
+        mapaRegional(bot,update)
+        return
     logger.info(u'el usuario %s quiere un mapa',str(update.effective_chat.id))
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
     hora = datetime.datetime.utcnow()
