@@ -26,3 +26,9 @@ sudo service mongod start
 # ejecute el bot
 python elbotdeltiempo.py
 ```
+
+## Licencias
+
+El logo utilizado es una versión del [icono](https://www.flaticon.com/free-icon/cloudy-day-outlined-weather-interface-symbol_53562) de [Rami McMin](https://www.flaticon.com/authors/rami-mcmin) publicado en [www.flaticon.com](https://www.flaticon.com/) con licencia CC 3.0 BY.
+
+La librería de bots de telegram utilizada es [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot), publicada bajo licencia LGPL-3.
