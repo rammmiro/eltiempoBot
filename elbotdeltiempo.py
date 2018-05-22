@@ -391,6 +391,11 @@ def mapa(bot,update):
 
 def mapaRegional(bot,update):
     user = getUser(bot, update)
+    if "idMunicipio" not in user:
+        bot.send_message(chat_id=user["_id"],
+            text=textoMunicipio(None),
+            parse_mode=ParseMode.MARKDOWN)
+        return
     logger.info(u'el usuario %s quiere un mapa regional',str(update.effective_chat.id))
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
     hora = datetime.datetime.utcnow()
