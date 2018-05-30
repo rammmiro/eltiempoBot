@@ -1,3 +1,4 @@
+[![Telegram bot](https://img.shields.io/badge/Telegram%20Bot-%40eltiempoBot-blue.svg)](https://t.me/eltiempoBot)
 # eltiempoBot
 El Bot del Tiempo
 
