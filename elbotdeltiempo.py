@@ -209,7 +209,11 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
             text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
-    treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
+    try:
+        treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
+    except URLError:
+        logger.error(u'URLError %s',str(user["idMunicipio"]))
+
     rootDia = treeDia.getroot()
     dias = [rootDia[4][i] for i in prediccionDias]
     for dia in dias:
@@ -390,13 +394,13 @@ def mapa(bot,update):
     output.close()
 
 def mapaRegional(bot,update):
+    logger.info(u'el usuario %s quiere un mapa regional',str(update.effective_chat.id))
     user = getUser(bot, update)
     if "idMunicipio" not in user:
         bot.send_message(chat_id=user["_id"],
             text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
-    logger.info(u'el usuario %s quiere un mapa regional',str(update.effective_chat.id))
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=(((hora.minute - 10) % 30) + 10))
