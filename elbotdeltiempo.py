@@ -211,7 +211,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
         return
     try:
         treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
-    except urllib2.URLError as err
+    except urllib2.URLError as err:
         logger.error(u'URLError %s',str(user["idMunicipio"]))
 
     rootDia = treeDia.getroot()
