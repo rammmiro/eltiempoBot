@@ -391,7 +391,7 @@ def mapa(bot,update):
             images.append(numpy.array(img))
             del img
         except (urllib2.HTTPError,urllib2.URLError) as err:
-            logger.error(u'URLError %s',str(user["idMunicipio"]))
+            logger.error(u'URLError %s',str(update.effective_chat.id))
             continue
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.5)
