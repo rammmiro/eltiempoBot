@@ -18,6 +18,7 @@ import googlemaps
 import logging
 import urllib
 import urllib2
+import requests
 import xml.etree.ElementTree as etree
 import datetime
 import time
