@@ -209,7 +209,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
             parse_mode=ParseMode.MARKDOWN)
         return
     try:
-        treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
+        treeDia = etree.parse(requests.get('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
     except (urllib2.HTTPError,urllib2.URLError) as err:
         logger.error(u'URLError %s',str(user["idMunicipio"]))
         return
@@ -224,7 +224,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
                 parse_mode=ParseMode.MARKDOWN)
     now = datetime.datetime.now()
     try:
-        treeHora = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml'))
+        treeHora = etree.parse(requests.get('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml'))
     except (urllib2.HTTPError,urllib2.URLError) as err:
         logger.error(u'URLError %s',str(user["idMunicipio"]))
         return
@@ -382,7 +382,7 @@ def mapa(bot,update):
     for i in range(23,0,-1):
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8pb.gif'
         try:
-            img = Image.open(StringIO(urllib2.urlopen(url).read()))
+            img = Image.open(StringIO(requests.get(url).read()))
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
             draw.text((2,2),"@"+BOTNAME,fill="white",font=font)
@@ -415,7 +415,7 @@ def mapaRegional(bot,update):
     for i in range(23,0,-1):
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8' + mapaCodigo[user["idMunicipio"][:2]] + u'.gif'
         try:
-            img = Image.open(StringIO(urllib2.urlopen(url).read()))
+            img = Image.open(StringIO(requests.get(url).read()))
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
             draw.text((2,20),"@"+BOTNAME,fill="white",font=font)
