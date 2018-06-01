@@ -211,8 +211,9 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
         return
     try:
         treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
-    except urllib2.URLError as err:
+    except (urllib2.HTTPError,urllib2.URLError) as err:
         logger.error(u'URLError %s',str(user["idMunicipio"]))
+        return
 
     rootDia = treeDia.getroot()
     dias = [rootDia[4][i] for i in prediccionDias]
@@ -223,7 +224,11 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
                 text=prediccion(dia,user),
                 parse_mode=ParseMode.MARKDOWN)
     now = datetime.datetime.now()
-    treeHora = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml'))
+    try:
+        treeHora = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml'))
+    except (urllib2.HTTPError,urllib2.URLError) as err:
+        logger.error(u'URLError %s',str(user["idMunicipio"]))
+        return
     rootHora = treeHora.getroot()
     if now.date() == datetime.datetime.strptime(rootHora[4][0].attrib['fecha'], '%Y-%m-%d').date():
         today = rootHora[4][0]
@@ -385,7 +390,8 @@ def mapa(bot,update):
             img.paste(logo,(2,399))
             images.append(numpy.array(img))
             del img
-        except urllib2.HTTPError:
+        except (urllib2.HTTPError,urllib2.URLError) as err:
+            logger.error(u'URLError %s',str(user["idMunicipio"]))
             continue
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.5)
@@ -417,7 +423,8 @@ def mapaRegional(bot,update):
             img.paste(logo,(428,2))
             images.append(numpy.array(img))
             del img
-        except urllib2.HTTPError:
+        except (urllib2.HTTPError,urllib2.URLError) as err:
+            logger.error(u'URLError %s',str(user["idMunicipio"]))
             continue
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.5)
