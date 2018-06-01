@@ -207,7 +207,12 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
             text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
-    treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
+    try:
+        treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
+    except (urllib2.HTTPError,urllib2.URLError) as err:
+        logger.error(u'URLError %s',str(user["idMunicipio"]))
+        return
+
     rootDia = treeDia.getroot()
     dias = [rootDia[4][i] for i in prediccionDias]
     for dia in dias:
@@ -217,7 +222,11 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
                 text=prediccion(dia,user),
                 parse_mode=ParseMode.MARKDOWN)
     now = datetime.datetime.now()
-    treeHora = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml'))
+    try:
+        treeHora = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml'))
+    except (urllib2.HTTPError,urllib2.URLError) as err:
+        logger.error(u'URLError %s',str(user["idMunicipio"]))
+        return
     rootHora = treeHora.getroot()
     if now.date() == datetime.datetime.strptime(rootHora[4][0].attrib['fecha'], '%Y-%m-%d').date():
         today = rootHora[4][0]
@@ -379,7 +388,8 @@ def mapa(bot,update):
             img.paste(logo,(2,399))
             images.append(numpy.array(img))
             del img
-        except urllib2.HTTPError:
+        except (urllib2.HTTPError,urllib2.URLError) as err:
+            logger.error(u'URLError %s',str(update.effective_chat.id))
             continue
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.5)
@@ -388,8 +398,13 @@ def mapa(bot,update):
     output.close()
 
 def mapaRegional(bot,update):
-    user = getUser(bot, update)
     logger.info(u'el usuario %s quiere un mapa regional',str(update.effective_chat.id))
+    user = getUser(bot, update)
+    if "idMunicipio" not in user:
+        bot.send_message(chat_id=user["_id"],
+            text=textoMunicipio(None),
+            parse_mode=ParseMode.MARKDOWN)
+        return
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=(((hora.minute - 10) % 30) + 10))
@@ -406,7 +421,8 @@ def mapaRegional(bot,update):
             img.paste(logo,(428,2))
             images.append(numpy.array(img))
             del img
-        except urllib2.HTTPError:
+        except (urllib2.HTTPError,urllib2.URLError) as err:
+            logger.error(u'URLError %s',str(user["idMunicipio"]))
             continue
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.5)
