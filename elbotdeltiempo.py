@@ -390,7 +390,7 @@ def mapa(bot,update):
             images.append(numpy.array(img))
             del img
         except requests.exceptions.RequestException as err:
-            logger.error(u'URLError de %s porque pasa ',str(update.effective_chat.id),str(err))
+            logger.error(u'URLError de %s porque pasa %s',str(update.effective_chat.id),str(err))
             continue
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.5)
