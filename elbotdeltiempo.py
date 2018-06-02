@@ -12,6 +12,7 @@ La información metereológica que muestra El Bot del Tiempo ha sido elaborada p
 """
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
+from telegram.ext.dispatcher import run_async
 from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup, ChatAction
 from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, ChatMigrated, NetworkError)
 import googlemaps
@@ -368,6 +369,7 @@ def cambiarConfiguracion(bot,user,opcion,query):
     query.edit_message_reply_markup(reply_markup=crearTecladoConfigurar(user))
     return
 
+@run_async
 def mapa(bot,update):
     if update.message.text.lower() == "/mapa regional":
         mapaRegional(bot,update)
@@ -398,6 +400,7 @@ def mapa(bot,update):
     bot.send_document(chat_id=update.effective_chat.id, document=output)
     output.close()
 
+@run_async
 def mapaRegional(bot,update):
     logger.info(u'el usuario %s quiere un mapa regional',str(update.effective_chat.id))
     user = getUser(bot, update)
