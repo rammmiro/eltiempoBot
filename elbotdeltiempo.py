@@ -209,9 +209,9 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
             parse_mode=ParseMode.MARKDOWN)
         return
     try:
-        treeDia = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml'))
-    except (urllib2.HTTPError,urllib2.URLError) as err:
-        logger.error(u'URLError %s',str(user["idMunicipio"]))
+        treeDia = etree.parse(requests.get('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml',timeout=2).content)
+    except requests.exceptions.RequestException as err:
+        logger.error(u'URLError de %s porque pasa %s',str(update.effective_chat.id),str(err))
         return
 
     rootDia = treeDia.getroot()
@@ -224,9 +224,9 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
                 parse_mode=ParseMode.MARKDOWN)
     now = datetime.datetime.now()
     try:
-        treeHora = etree.parse(urllib2.urlopen('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml'))
-    except (urllib2.HTTPError,urllib2.URLError) as err:
-        logger.error(u'URLError %s',str(user["idMunicipio"]))
+        treeHora = etree.parse(requests.get('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml',timeout=2).content)
+    except requests.exceptions.RequestException as err:
+        logger.error(u'URLError de %s porque pasa %s',str(update.effective_chat.id),str(err))
         return
     rootHora = treeHora.getroot()
     if now.date() == datetime.datetime.strptime(rootHora[4][0].attrib['fecha'], '%Y-%m-%d').date():
