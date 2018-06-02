@@ -439,7 +439,10 @@ def mapaRegional(bot,update):
     output.seek(0)
     bot.send_document(chat_id=update.effective_chat.id, document=output)
     output.close()
-    bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
+    try:
+        bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
+    except:
+        pass
 
 
 def error(bot, update, error):
