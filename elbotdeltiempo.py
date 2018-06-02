@@ -212,7 +212,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     try:
         treeDia = etree.ElementTree(etree.fromstring(requests.get('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml',timeout=2).content))
     except requests.exceptions.RequestException as err:
-        logger.error(u'URLError de %s porque pasa %s',str(update.effective_chat.id),str(err))
+        logger.error(u'URLError de %s porque pasa %s',str(user["_id"]),str(err))
         return
 
     rootDia = treeDia.getroot()
@@ -227,7 +227,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     try:
         treeHora = etree.ElementTree(etree.fromstring(requests.get('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml',timeout=2).content))
     except requests.exceptions.RequestException as err:
-        logger.error(u'URLError de %s porque pasa %s',str(update.effective_chat.id),str(err))
+        logger.error(u'URLError de %s porque pasa %s',str(user["_id"]),str(err))
         return
     rootHora = treeHora.getroot()
     if now.date() == datetime.datetime.strptime(rootHora[4][0].attrib['fecha'], '%Y-%m-%d').date():
