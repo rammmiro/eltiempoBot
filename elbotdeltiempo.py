@@ -209,7 +209,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
             parse_mode=ParseMode.MARKDOWN)
         return
     try:
-        treeDia = etree.fromstring(requests.get('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml',timeout=2).content)
+        treeDia = etree.ElementTree(etree.fromstring(requests.get('http://www.aemet.es/xml/municipios/localidad_' + str(user["idMunicipio"]) + '.xml',timeout=2).content))
     except requests.exceptions.RequestException as err:
         logger.error(u'URLError de %s porque pasa %s',str(update.effective_chat.id),str(err))
         return
@@ -224,7 +224,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
                 parse_mode=ParseMode.MARKDOWN)
     now = datetime.datetime.now()
     try:
-        treeHora = etree.fromstring(requests.get('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml',timeout=2).content)
+        treeHora = etree.ElementTree(etree.fromstring(requests.get('http://www.aemet.es/xml/municipios_h/localidad_h_' + str(user["idMunicipio"]) + '.xml',timeout=2).content))
     except requests.exceptions.RequestException as err:
         logger.error(u'URLError de %s porque pasa %s',str(update.effective_chat.id),str(err))
         return
