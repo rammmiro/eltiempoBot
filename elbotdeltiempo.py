@@ -423,7 +423,7 @@ def mapaRegional(bot,update):
             bot.edit_message_text(
                 chat_id=user["_id"],
                 message_id = espera.message_id,
-                text=u'enviando mapa\n(puede tardar unos segundos)\n' + u'[' + u':'*((50-i)/2) + (25-(50-i)/2) + u']',
+                text=u'enviando mapa\n(puede tardar unos segundos)\n' + u'[' + u':'*((50-i)/2) + u'.'*(25-(50-i)/2) + u']',
                 parse_mode=ParseMode.MARKDOWN)
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*10)).strftime('%Y%m%d%H%M') + u'_r8' + mapaCodigo[user["idMunicipio"][:2]] + u'.gif'
         try:
