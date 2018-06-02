@@ -410,12 +410,21 @@ def mapaRegional(bot,update):
             parse_mode=ParseMode.MARKDOWN)
         return
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
+    espera = bot.send_message(chat_id=user["_id"],
+        text=u'`enviando mapa`\n(puede tardar unos segundos)`\n' + u'`[' + u'.'*25 + u']`',
+        parse_mode=ParseMode.MARKDOWN)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=((hora.minute - 20) % 10))
     font = ImageFont.truetype("OpenSans.ttf",20)
     logo = Image.open('minilogo.png')
     images = []
     for i in range(47,0,-1):
+        if i%2:
+            bot.edit_message_text(
+                chat_id=user["_id"],
+                message_id = espera.message_id,
+                text=u'`enviando mapa`\n(puede tardar unos segundos)`\n' + u'`[' + u':'*((50-i)/2) + (25-(50-i)/2) + u']`',
+                parse_mode=ParseMode.MARKDOWN)
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*10)).strftime('%Y%m%d%H%M') + u'_r8' + mapaCodigo[user["idMunicipio"][:2]] + u'.gif'
         try:
             img = Image.open(StringIO(requests.get(url,timeout=2).content))
@@ -433,6 +442,7 @@ def mapaRegional(bot,update):
     output.seek(0)
     bot.send_document(chat_id=update.effective_chat.id, document=output)
     output.close()
+    bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
 
 
 def error(bot, update, error):
