@@ -410,7 +410,7 @@ def mapaRegional(bot,update):
             parse_mode=ParseMode.MARKDOWN)
         return
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
-    espera = bot.send_message(chat_id=user["_id"],text=u'enviando mapa\n(puede tardar unos segundos)\n' + u'`\[' + u'.'*25 + u'``\]',parse_mode=ParseMode.MARKDOWN)
+    espera = bot.send_message(chat_id=user["_id"],text=u'enviando mapa\n(puede tardar unos segundos)\n' + u'`\[' + u'.'*25 + u'\]`',parse_mode=ParseMode.MARKDOWN)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=((hora.minute - 20) % 10))
     font = ImageFont.truetype("OpenSans.ttf",20)
