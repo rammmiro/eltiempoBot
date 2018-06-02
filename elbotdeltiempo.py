@@ -376,12 +376,17 @@ def mapa(bot,update):
         return
     logger.info(u'el usuario %s quiere un mapa',str(update.effective_chat.id))
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
+    espera = bot.send_message(chat_id=user["_id"],text=u'enviando mapa\n(puede tardar unos segundos)\n' + u'`\[' + u'.'*25 + u'\]`',parse_mode=ParseMode.MARKDOWN)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=hora.minute % 30)
     font = ImageFont.truetype("OpenSans.ttf",20)
     logo = Image.open('minilogo.png')
     images = []
     for i in range(23,0,-1):
+        try:
+            bot.edit_message_text(chat_id=user["_id"],message_id = espera.message_id,text=u'enviando mapa\n(puede tardar unos segundos)\n' + u'\[`' + u':'*(25-i-1) + u'.'*(i+1) + u'`]',parse_mode=ParseMode.MARKDOWN)
+        except:
+            pass
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8pb.gif'
         try:
             img = Image.open(StringIO(requests.get(url,timeout=2).content))
@@ -399,6 +404,11 @@ def mapa(bot,update):
     output.seek(0)
     bot.send_document(chat_id=update.effective_chat.id, document=output)
     output.close()
+    try:
+        bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
+    except:
+        bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
+        pass
 
 @run_async
 def mapaRegional(bot,update):
@@ -442,6 +452,7 @@ def mapaRegional(bot,update):
     try:
         bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
     except:
+        bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
         pass
 
 
