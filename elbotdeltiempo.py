@@ -405,9 +405,9 @@ def mapa(bot,update):
     bot.send_document(chat_id=update.effective_chat.id, document=output)
     output.close()
     try:
-        bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
+        bot.delete_message(chat_id=update.effective_chat.id,message_id = espera.message_id)
     except:
-        bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
+        bot.delete_message(chat_id=update.effective_chat.id,message_id = espera.message_id)
         pass
 
 @run_async
