@@ -382,11 +382,7 @@ def mapa(bot,update):
     for i in range(23,0,-1):
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8pb.gif'
         try:
-<<<<<<< HEAD
             img = Image.open(StringIO(requests.get(url, stream=True).raw))
-=======
-            img = Image.open(StringIO(requests.get(url).read()))
->>>>>>> 1dcf198079cfc6494272776cc37c648cb721c1a9
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
             draw.text((2,2),"@"+BOTNAME,fill="white",font=font)
