@@ -412,7 +412,7 @@ def mapaRegional(bot,update):
     font = ImageFont.truetype("OpenSans.ttf",20)
     logo = Image.open('minilogo.png')
     images = []
-    for i in range(23,0,-1):
+    for i in range(47,0,-1):
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*10)).strftime('%Y%m%d%H%M') + u'_r8' + mapaCodigo[user["idMunicipio"][:2]] + u'.gif'
         try:
             img = Image.open(StringIO(requests.get(url,timeout=2).content))
@@ -426,7 +426,7 @@ def mapaRegional(bot,update):
             logger.error(u'URLError de %s porque pasa %s',str(update.effective_chat.id),str(err))
             continue
     output = StringIO()
-    imageio.mimsave(output,images,format = "gif", duration = 0.5)
+    imageio.mimsave(output,images,format = "gif", duration = 0.25)
     output.seek(0)
     bot.send_document(chat_id=update.effective_chat.id, document=output)
     output.close()
