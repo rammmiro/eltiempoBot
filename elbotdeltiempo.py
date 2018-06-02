@@ -382,15 +382,15 @@ def mapa(bot,update):
     for i in range(23,0,-1):
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8pb.gif'
         try:
-            img = Image.open(StringIO(requests.get(url).content))
+            img = Image.open(StringIO(requests.get(url,timeout=2).content))
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
             draw.text((2,2),"@"+BOTNAME,fill="white",font=font)
             img.paste(logo,(2,399))
             images.append(numpy.array(img))
             del img
-        except (urllib2.HTTPError,urllib2.URLError) as err:
-            logger.error(u'URLError %s',str(update.effective_chat.id))
+        except requests.exceptions.RequestException as err:
+            logger.error(u'URLError de %s porque pasa ',str(update.effective_chat.id),err)
             continue
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.5)
