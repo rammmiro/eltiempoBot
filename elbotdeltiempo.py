@@ -424,7 +424,7 @@ def mapaRegional(bot,update):
             parse_mode=ParseMode.MARKDOWN)
         return
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
-    espera = send_message(bot=bot,chat_id=user["_id"],text=u'_enviando mapa..._\n⏳ (puede tardar unos segundos)\n' + u'\[`' + u'.'*25 + u'`\]',parse_mode=ParseMode.MARKDOWN)
+    espera = send_message(bot=bot,chat_id=user["_id"],text=u'_enviando mapa..._\n⏳ (puede tardar unos segundos)\n' + u'\[`' + u'.'*25 + u'`]',parse_mode=ParseMode.MARKDOWN)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=((hora.minute - 20) % 10))
     font = ImageFont.truetype("OpenSans.ttf",20)
@@ -462,7 +462,7 @@ def mapaRegional(bot,update):
 def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,reply_markup=None,repeticiones=0):
     if repeticiones < 3:
         try:
-            bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup)
+            return bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup)
         except TimedOut:
             logger.info('timed out %s al enviar mensaje', str(repeticiones))
             send_message(bot=bot,chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup,repeticiones = (repeticiones+1))
@@ -472,7 +472,7 @@ def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,reply_markup=None,re
 def send_document(bot,chat_id,document,repeticiones=0):
     if repeticiones < 3:
         try:
-            bot.send_document(chat_id=chat_id,document=document)
+            return bot.send_document(chat_id=chat_id,document=document)
         except TimedOut:
             logger.info('timed out %s al enviar documento', str(repeticiones))
             send_document(bot=bot,chat_id=chat_id,document=document,repeticiones = (repeticiones+1))
