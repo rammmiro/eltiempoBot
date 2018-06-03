@@ -62,14 +62,14 @@ def start(bot, update):
     user = collection.find_one({"_id":update.effective_chat.id})
     logger.info(u'nuevo usuario con id: %s se ha registrado', str(user["_id"]))
     if "municipio" not in user:
-        bot.send_message(chat_id=update.effective_chat.id,
+        send_message(bot=bot,chat_id=update.effective_chat.id,
             text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
     else:
-        bot.send_message(chat_id=update.effective_chat.id,
+        send_message(bot=bot,chat_id=update.effective_chat.id,
             text=textoMunicipio(user["municipio"]),
             parse_mode=ParseMode.MARKDOWN)
-    bot.send_message(chat_id=update.effective_chat.id,
+    send_message(bot=bot,chat_id=update.effective_chat.id,
         text=u'Para que te diga el tiempo envía /tiempo.\nPara acceder a todas las opciones pulsa /configurar.\nPara tener más ayuda manda /ayuda.',
         parse_mode=ParseMode.MARKDOWN)
 
@@ -110,18 +110,18 @@ def municipio(bot, update):
     user = getUser(bot, update)
     if update.message.text == "/municipio":
         if "municipio" in user:
-            bot.send_message(chat_id=update.effective_chat.id,
+            send_message(bot=bot,chat_id=update.effective_chat.id,
                 text=textoMunicipio(user["municipio"]),
                 parse_mode=ParseMode.MARKDOWN)
         else:
-            bot.send_message(chat_id=update.effective_chat.id,
+            send_message(bot=bot,chat_id=update.effective_chat.id,
                 text=textoMunicipio(None),
                 parse_mode=ParseMode.MARKDOWN)
         return
     geocode_result = gmaps.geocode(address=update.message.text[update.message.text.index(' ') + 1:],components={"country":"ES"})
     if not geocode_result:
         logger.warning(u'El usuario %s ha buscado el municipio %s, que no existe.', str(user["_id"]),update.message.text[update.message.text.index(' ') + 1:])
-        bot.send_message(chat_id=update.effective_chat.id,
+        send_message(bot=bot,chat_id=update.effective_chat.id,
             text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\nPrueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
         return
@@ -130,12 +130,12 @@ def municipio(bot, update):
         pais = next((item for item in reverse_geocode_result[0]['address_components'] if item['types'][0] == 'country'),None)['short_name']
     except StopIteration:
         logger.warning(u'stop iteration: sin país, %s ha escrito: %s', str(update.effective_chat.id), update.message.text)
-        bot.send_message(chat_id=update.effective_chat.id,
+        send_message(bot=bot,chat_id=update.effective_chat.id,
             text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\nPrueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
         return
     if pais != 'ES':
-        bot.send_message(chat_id=update.effective_chat.id,
+        send_message(bot=bot,chat_id=update.effective_chat.id,
             text=u'Solo conozco el tiempo de municipios españoles, lo siento. Si quieres recibir el tiempo de una localidad española comprueba que la hayas escrito bien.\nQuizás hay otro lugar en el mundo que se llama igual, prueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
         logger.warning(u'Ubicación en: %s, %s ha escrito: %s',pais,str(update.effective_chat.id), update.message.text)
@@ -146,7 +146,7 @@ def municipio(bot, update):
                 if municipios.get(nombre.decode('utf-8').lower().encode('utf-8')) == None: nombre = next(item for item in direccion['address_components'] if item['types'][0] == 'administrative_area_level_4')['long_name'].encode('utf-8')
                 codigoMunicipio = municipios[nombre.decode('utf-8').lower().encode('utf-8')]
                 collection.update_one({'_id':update.effective_chat.id}, {"$set": {"municipio": nombre, "idMunicipio": codigoMunicipio}}, upsert=False)
-                bot.send_message(chat_id=update.effective_chat.id,
+                send_message(bot=bot,chat_id=update.effective_chat.id,
                     text=u'¡Municipio actualizado! 🌍\nAhora cuando me envíes el comando /tiempo te responderé con la predicción para *' + unicode(nombre, "utf-8") + '*.',
                     parse_mode=ParseMode.MARKDOWN)
                 logger.info(u'%s ha cambiado su ubicación a %s (%s)',str(user["_id"]),unicode(nombre, "utf-8"),str(codigoMunicipio).decode('utf-8'))
@@ -154,7 +154,7 @@ def municipio(bot, update):
             except StopIteration:
                 logger.warning('stop iteration, %s ha escrito: %s',str(update.effective_chat.id), update.message.text)
                 continue
-        bot.send_message(chat_id=update.effective_chat.id,
+        send_message(bot=bot,chat_id=update.effective_chat.id,
             text=u'No encuentro ese municipio. ¿Estás seguro de que lo has escrito bien?\nPrueba a ser más específico, así:\n\n`/municipio Santander, Cantabria`',
             parse_mode=ParseMode.MARKDOWN)
 def comandoTiempo(bot,update):
@@ -172,7 +172,7 @@ def comandoTiempoMenu(bot,update):
                 [InlineKeyboardButton(u"Mañana (cada 2 horas)", callback_data='tiempoMenuMANYANA2H')],
                 [InlineKeyboardButton(u"Hoy y Mañana (cada 2 h)", callback_data='tiempoMenuHOYMANYANA2H')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    bot.send_message(text=u"Elige la predicción:",
+    send_message(bot=bot,text=u"Elige la predicción:",
                           chat_id=update.effective_chat.id,
                           reply_markup=reply_markup)
     return
@@ -197,10 +197,10 @@ def alerta(bot, job):
             logger.error('telegram error %s', str(user["_id"]))
     #estadisticas al admin
     user = collection.find_one({"alias":ADMIN})
-    bot.send_message(chat_id=user["_id"], text=u'#usuariosTotales ' + str(collection.find().count()))
-    bot.send_message(chat_id=user["_id"], text=u'#usuariosLocalizados ' + str(collection.find({"idMunicipio":{"$exists":True}}).count()))
-    bot.send_message(chat_id=user["_id"], text=u'#usuariosLocalizadosActivos ' + str(collection.find({"$and":[{"activo": True}, {"idMunicipio":{"$exists":True}}]}).count()))
-    bot.send_message(chat_id=user["_id"], text=u'#usuariosSuscritos ' + str(collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}, {"idMunicipio":{"$exists":True}}]}).count()))
+    send_message(bot=bot,chat_id=user["_id"], text=u'#usuariosTotales ' + str(collection.find().count()))
+    send_message(bot=bot,chat_id=user["_id"], text=u'#usuariosLocalizados ' + str(collection.find({"idMunicipio":{"$exists":True}}).count()))
+    send_message(bot=bot,chat_id=user["_id"], text=u'#usuariosLocalizadosActivos ' + str(collection.find({"$and":[{"activo": True}, {"idMunicipio":{"$exists":True}}]}).count()))
+    send_message(bot=bot,chat_id=user["_id"], text=u'#usuariosSuscritos ' + str(collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}, {"idMunicipio":{"$exists":True}}]}).count()))
 
 def bugFix(bot,job):
     #logger.info(u'se está intentando solucionar el error')
@@ -209,7 +209,7 @@ def bugFix(bot,job):
 
 def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     if "idMunicipio" not in user:
-        bot.send_message(chat_id=user["_id"],
+        send_message(bot=bot,chat_id=user["_id"],
             text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
@@ -224,7 +224,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     for dia in dias:
         lluvia = next(item for item in dia.findall('prob_precipitacion') if item.text is not None).text
         if not soloLluvia or lluvia != "0":
-            bot.send_message(chat_id=user["_id"],
+            send_message(bot=bot,chat_id=user["_id"],
                 text=prediccion(dia,user),
                 parse_mode=ParseMode.MARKDOWN)
     now = datetime.datetime.now()
@@ -244,14 +244,14 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
         if hora >= now.hour and today.find('./estado_cielo[@periodo="%s"]' % str(hora).zfill(2)) is not None:
             lluvia = today.find('./precipitacion[@periodo="%s"]' % str(hora).zfill(2)).text
             if not soloLluvia or lluvia != "0":
-                bot.send_message(chat_id=user["_id"],
+                send_message(bot=bot,chat_id=user["_id"],
                     text=prediccionHora(today,hora,user),
                     parse_mode=ParseMode.MARKDOWN)
     for hora in prediccionManyana:
         if tomorrow.find('./estado_cielo[@periodo="%s"]' % str(hora).zfill(2)) is not None:
             lluvia = tomorrow.find('./precipitacion[@periodo="%s"]' % str(hora).zfill(2)).text
             if not soloLluvia or lluvia != "0":
-                bot.send_message(chat_id=user["_id"],
+                send_message(bot=bot,chat_id=user["_id"],
                     text=prediccionHora(tomorrow,hora,user),
                     parse_mode=ParseMode.MARKDOWN)
 
@@ -380,7 +380,7 @@ def mapa(bot,update):
         return
     logger.info(u'el usuario %s quiere un mapa',str(update.effective_chat.id))
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
-    espera = bot.send_message(chat_id=update.effective_chat.id,text=u'_enviando mapa..._\n⏳ (puede tardar unos segundos)\n' + u'\[`' + u'.'*25 + u'`]',parse_mode=ParseMode.MARKDOWN)
+    espera = send_message(bot=bot,chat_id=update.effective_chat.id,text=u'_enviando mapa..._\n⏳ (puede tardar unos segundos)\n' + u'\[`' + u'.'*25 + u'`]',parse_mode=ParseMode.MARKDOWN)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=hora.minute % 30)
     font = ImageFont.truetype("OpenSans.ttf",20)
@@ -419,12 +419,12 @@ def mapaRegional(bot,update):
     logger.info(u'el usuario %s quiere un mapa regional',str(update.effective_chat.id))
     user = getUser(bot, update)
     if "idMunicipio" not in user:
-        bot.send_message(chat_id=user["_id"],
+        send_message(bot=bot,chat_id=user["_id"],
             text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
     bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
-    espera = bot.send_message(chat_id=user["_id"],text=u'_enviando mapa..._\n⏳ (puede tardar unos segundos)\n' + u'\[`' + u'.'*25 + u'`\]',parse_mode=ParseMode.MARKDOWN)
+    espera = send_message(bot=bot,chat_id=user["_id"],text=u'_enviando mapa..._\n⏳ (puede tardar unos segundos)\n' + u'\[`' + u'.'*25 + u'`\]',parse_mode=ParseMode.MARKDOWN)
     hora = datetime.datetime.utcnow()
     hora = hora - datetime.timedelta(minutes=((hora.minute - 20) % 10))
     font = ImageFont.truetype("OpenSans.ttf",20)
@@ -459,6 +459,15 @@ def mapaRegional(bot,update):
         bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
         pass
 
+def send_message(bot,chat_id,text,parse_mode=telegram.ParseMode.HTML,repeticiones=0):
+    if repeticiones < 5:
+        try:
+            bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode)
+        except TimedOut:
+            logger.info('timed out %s al enviar mensaje', str(repeticiones))
+            send_message(bot=bot,chat_id=chat_id,text=text,parse_mode=parse_mode,repeticiones = (repeticiones+1))
+    else:
+        logger.error('timed out repetido al enviar mensaje')
 
 def error(bot, update, error):
     """Log Errors caused by Updates."""
