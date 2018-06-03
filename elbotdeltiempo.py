@@ -406,7 +406,7 @@ def mapa(bot,update):
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.5)
     output.seek(0)
-    bot.send_document(chat_id=update.effective_chat.id, document=output)
+    send_document(bot,chat_id=update.effective_chat.id, document=output)
     output.close()
     try:
         bot.delete_message(chat_id=update.effective_chat.id,message_id = espera.message_id)
@@ -451,7 +451,7 @@ def mapaRegional(bot,update):
     output = StringIO()
     imageio.mimsave(output,images,format = "gif", duration = 0.25)
     output.seek(0)
-    bot.send_document(chat_id=update.effective_chat.id, document=output)
+    send_document(bot,chat_id=update.effective_chat.id, document=output)
     output.close()
     try:
         bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
@@ -460,7 +460,7 @@ def mapaRegional(bot,update):
         pass
 
 def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,reply_markup=None,repeticiones=0):
-    if repeticiones < 5:
+    if repeticiones < 3:
         try:
             bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup)
         except TimedOut:
@@ -468,6 +468,16 @@ def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,reply_markup=None,re
             send_message(bot=bot,chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup,repeticiones = (repeticiones+1))
     else:
         logger.error('timed out repetido al enviar mensaje')
+
+def send_document(bot,chat_id,document,repeticiones=0):
+    if repeticiones < 3:
+        try:
+            bot.send_document(chat_id=chat_id,document=document)
+        except TimedOut:
+            logger.info('timed out %s al enviar documento', str(repeticiones))
+            send_document(bot=bot,chat_id=chat_id,document=document,repeticiones = (repeticiones+1))
+    else:
+        logger.error('timed out repetido al enviar documento')
 
 def error(bot, update, error):
     """Log Errors caused by Updates."""
