@@ -459,7 +459,7 @@ def mapaRegional(bot,update):
         bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
         pass
 
-def send_message(bot,chat_id,text,parse_mode=telegram.ParseMode.HTML,repeticiones=0):
+def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,repeticiones=0):
     if repeticiones < 5:
         try:
             bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode)
