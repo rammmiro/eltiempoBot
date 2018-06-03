@@ -459,13 +459,13 @@ def mapaRegional(bot,update):
         bot.delete_message(chat_id=user["_id"],message_id = espera.message_id)
         pass
 
-def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,repeticiones=0):
+def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,reply_markup=None,repeticiones=0):
     if repeticiones < 5:
         try:
-            bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode)
+            bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup)
         except TimedOut:
             logger.info('timed out %s al enviar mensaje', str(repeticiones))
-            send_message(bot=bot,chat_id=chat_id,text=text,parse_mode=parse_mode,repeticiones = (repeticiones+1))
+            send_message(bot=bot,chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup,repeticiones = (repeticiones+1))
     else:
         logger.error('timed out repetido al enviar mensaje')
 
