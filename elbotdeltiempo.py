@@ -20,6 +20,7 @@ import logging
 import urllib
 import urllib2
 import requests
+from cachecontrol import CacheControl
 import xml.etree.ElementTree as etree
 import datetime
 import time
@@ -43,6 +44,9 @@ gmaps = googlemaps.Client(key=GOOGLEMAPSKEY)
 client = MongoClient()
 db = client.elbotdeltiempodb
 collection = db.users
+
+sess = requests.session()
+cached_sess = CacheControl(sess)
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -389,7 +393,7 @@ def mapa(bot,update):
             pass
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*30)).strftime('%Y%m%d%H%M') + u'_r8pb.gif'
         try:
-            img = Image.open(StringIO(requests.get(url,timeout=2).content))
+            img = Image.open(StringIO(cached_sess.get(url,timeout=2).content))
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
             draw.text((2,2),"@"+BOTNAME,fill="white",font=font)
@@ -434,7 +438,7 @@ def mapaRegional(bot,update):
                 pass
         url = u'http://www.aemet.es/imagenes_d/eltiempo/observacion/radar/' + (hora - datetime.timedelta(minutes=i*10)).strftime('%Y%m%d%H%M') + u'_r8' + mapaCodigo[user["idMunicipio"][:2]] + u'.gif'
         try:
-            img = Image.open(StringIO(requests.get(url,timeout=2).content))
+            img = Image.open(StringIO(cached_sess.get(url,timeout=2).content))
             img = img.convert('RGB')
             draw = ImageDraw.Draw(img)
             draw.text((2,20),"@"+BOTNAME,fill="white",font=font)
