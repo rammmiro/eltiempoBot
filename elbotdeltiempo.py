@@ -180,7 +180,7 @@ def comandoTiempoMenu(bot,update):
 def alerta(bot, job):
     logger.info(u'se está enviando la alerta')
     for user in collection.find({"$and":[{"activo": True}, {"alerta": {"$gte": 1}}, {"idMunicipio":{"$exists":True}}]}):
-        time.sleep(0.1)
+        time.sleep(0.5)
         try:
             if user["alerta"] == 1:
                 tiempo(bot,user,user["configurarAlerta"]["dias"],user["configurarAlerta"]["horas"]["hoy"],user["configurarAlerta"]["horas"]["manyana"],False)
@@ -224,6 +224,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     for dia in dias:
         lluvia = next(item for item in dia.findall('prob_precipitacion') if item.text is not None).text
         if not soloLluvia or lluvia != "0":
+            time.sleep(0.1)
             send_message(bot=bot,chat_id=user["_id"],
                 text=prediccion(dia,user),
                 parse_mode=ParseMode.MARKDOWN)
@@ -460,7 +461,7 @@ def mapaRegional(bot,update):
         pass
 
 def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,reply_markup=None,repeticiones=0):
-    if repeticiones < 3:
+    if repeticiones < 5:
         try:
             return bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup)
         except TimedOut:
