@@ -376,7 +376,7 @@ def cambiarConfiguracion(bot,user,opcion,query):
     query.edit_message_reply_markup(reply_markup=crearTecladoConfigurar(user))
     return
 
-def aireCalidad(bot, update):
+def calidadAire(bot, update):
     driver = webdriver.Firefox()
     driver.get("http://servicios.jcyl.es/esco/datosTiempoReal.action")
 
