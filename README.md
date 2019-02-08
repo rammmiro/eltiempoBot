@@ -17,6 +17,9 @@ cd ./eltiempoBot
 # instale los paquetes de python necesarios
 pip install -r requirements.txt --user
 
+# descargue el driver de navegador desde https://github.com/mozilla/geckodriver/releases
+cp ./geckodriver /usr/local/bin/geckodriver
+
 # copie el archivo de configuración y añada el TOKEN de telegram y la API KEY de google maps.
 cp config.example.py config.py
 nano config.py
