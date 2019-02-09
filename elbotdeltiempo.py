@@ -28,6 +28,7 @@ from pymongo import MongoClient
 import subprocess
 import os
 from municipios import municipios
+from municipiosCalidadAire import municipiosCalidadAire
 from auxiliar import estados_cielo, direccion_viento, num_emoji, active_emoji, alerta_text, dia_semana, predicciones, alertas, mapaCodigo
 from config import TELEGRAMTOKEN, GOOGLEMAPSKEY, BOTNAME, ADMIN
 from PIL import Image, ImageDraw, ImageFont
@@ -376,7 +377,8 @@ def cambiarConfiguracion(bot,user,opcion,query):
     return
 
 def calidadAire(bot, update):
-    html_page = urllib2.urlopen("http://servicios.jcyl.es/esco/datosTiempoReal.action?provincia=42&estacion=61&consultar=1")
+    user = getUser(bot, update)
+    html_page = urllib2.urlopen("http://servicios.jcyl.es/esco/datosTiempoReal.action?provincia=" + municipioCalidadAire[user[municipio]]["provincia"] + "&estacion=" + municipioCalidadAire[user[municipio]]["value"] + "&tamanoPagina=50&consultar=1")
     soup = BeautifulSoup(html_page,"html.parser")
     row = soup.findAll('tr','success')[-1]
     data = [ cell.get_text(strip=True) for cell in row.findAll('td')]
