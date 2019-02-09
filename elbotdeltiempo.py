@@ -379,10 +379,11 @@ def calidadAire(bot, update):
     html_page = urllib2.urlopen("http://servicios.jcyl.es/esco/datosTiempoReal.action?provincia=42&estacion=61&consultar=1")
     soup = BeautifulSoup(html_page,"html.parser")
     row = soup.findAll('tr','success')[-1]
-    data = [cell.get_text(strip=True) for cell in row.findAll('td')]
+    data = [cell.get_text(strip=True) if cell.get_text(strip=True) is not u'' else u'—' for cell in row.findAll('td')]
+
 
     send_message(bot=bot,chat_id=update.effective_chat.id,
-        text=u'**Calidad del aire**:\n' + data[-1] + u' ' + data[0] + u'\nCO (mg/m³): ' + data[1] + u'\nNO (μg/m³): ' + data[2] + u'\nNO₂ (μg/m³): ' + data[3] + u'\nO₃ (μg/m³): ' + data[4] + u'\nPM10 (μg/m³): ' + data[5] + u'\nPM25 (μg/m³): ' + data[6] + u'\nSO₂ (μg/m³): ' + data[7],
+        text=u'*Calidad del aire*:\n' + data[-1] + u' ' + data[0] + u'\nCO (mg/m³): ' + data[1] + u'\nNO (μg/m³): ' + data[2] + u'\nNO₂ (μg/m³): ' + data[3] + u'\nO₃ (μg/m³): ' + data[4] + u'\nPM10 (μg/m³): ' + data[5] + u'\nPM25 (μg/m³): ' + data[6] + u'\nSO₂ (μg/m³): ' + data[7],
         parse_mode=ParseMode.MARKDOWN)
 
 
