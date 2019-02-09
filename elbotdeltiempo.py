@@ -378,7 +378,7 @@ def cambiarConfiguracion(bot,user,opcion,query):
 
 def calidadAire(bot, update):
     user = getUser(bot, update)
-    html_page = urllib2.urlopen("http://servicios.jcyl.es/esco/datosTiempoReal.action?provincia=" + municipiosCalidadAire[user["municipio"]]["provincia"] + "&estacion=" + municipiosCalidadAire[user["municipio"]]["value"] + "&tamanoPagina=50&consultar=1")
+    html_page = urllib2.urlopen("http://servicios.jcyl.es/esco/datosTiempoReal.action?provincia=" + municipiosCalidadAire[user["municipio"].lower()]["provincia"] + "&estacion=" + municipiosCalidadAire[user["municipio"].lower()]["value"] + "&tamanoPagina=50&consultar=1")
     soup = BeautifulSoup(html_page,"html.parser")
     row = soup.findAll('tr','success')[-1]
     data = [ cell.get_text(strip=True) for cell in row.findAll('td')]
