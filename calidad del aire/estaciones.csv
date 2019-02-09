@@ -1,0 +1,91 @@
+ESTACIÓN;LOCALIZACIÓN;PROVINCIA;LONGITUD;LATITUD;ALTITUD;OPERATIVA
+Avila;Estación de autobuses;ÁVILA;"04º41'17"" W";"40º39'31"" N";1150 m;No
+Avila II;C/ Los canteros;ÁVILA;"04º42'02""W";"40º39'53""N";1093m;Si
+Aranda de Duero 2;C/ Sulidiza;BURGOS;"03º41'20"" W";"41º39'56"" N";801 m;Si
+Aranda de Duero;Jardines de Don Diego;BURGOS;"03º41'02"" W";"41º40'16"" N";865 m;No
+Burgos1;Plaza de los Lavaderos;BURGOS;"03º40'32"" W";"42º21'03"" N";929 m;Si
+Burgos2;Facultad de Teología;BURGOS;"03º40º28"" W";"42º21'04"" N";929 m;No
+Burgos3;Plaza de San Agustín;BURGOS;"03º41'02"" W";"41º40'16"" N";929 m;No
+Burgos4;Fuentes Blancas;BURGOS;"03º38'10"" W";"42º20'10"" N";929 m;Si
+Burgos5;Teresa de Cartagena Saravia;BURGOS;"03º43'16"" W";"42º20'44"" N";929 m;No
+Medina de Pomar;Helipuerto;BURGOS;"03º28'31"" W";"42º57'09"" N";613 m;Si
+Miranda de Ebro1;Carretera Miranda-Logroño;BURGOS;"02º55'03"" W";"42º41'04"" N";471 m;Si
+Miranda de Ebro2;Parque Antonio Cabezón;BURGOS;"02º56'26"" W";"42º41'17"" N";471 m;Si
+Miranda de Ebro3;Antiguo Recinto Ferial;BURGOS;"02º57'16"" W";"42º41'15"" N";471 m;No
+C.T.Anllares - Anllares;Anllares;LEÓN;"06º32'40"" W";"42º50'47"" N";925 m;Si
+C.T.Anllares - Anllarinos;Anllarinos;LEÓN;"06º34'08"" W";"42º50'33"" N";875 m;NO
+C.T.Anllares - Hospital del Sil;Hospital del Sil;LEÓN;"06º30'46"" W";"42º49'19"" N";700 m;Si
+C.T.Anllares - Lillo;Lillo;LEÓN;"06º36'14"" W";"42º46'53"" N";700 m;Si
+C.T.Anllares - Palacios del Sil;Palacios del Sil;LEÓN;"06º26'24"" W";"42º52'40"" N";750 m;Si
+C.T.Anllares - PÃ¡ramo del Sil;Páramo del Sil;LEÓN;"06º29'49"" W";"42º49'10"" N";725 m;NO
+C.T.Anllares - Sorbeda;Sorbeda;LEÓN;"06º32'51"" W";"42º48'39"" N";950 m;NO
+C.T.Anllares - Susañe;Susañe;LEÓN;"06º30'04"" W";"42º50'22"" N";900 m;Si
+C.T.Compostilla-Compostilla;Compostilla;LEÓN;"06º35'22"" W";"42º34'15"" N";600 m;Si
+C.T.Compostilla-Congosto;Congosto;LEÓN;"06º31'15"" W";"42º37'32"" N";720 m;Si
+C.T.Compostilla-Cortiguera;Cortiguera;LEÓN;"06º38'36"" W";"42º36'42"" N";560 m;Si
+C.T.Compostilla-Cueto;Cueto;LEÓN;"06º39'44"" W";"42º38'11"" N";600 m;No
+C.T.Compostilla-San Miguel;San Miguel;LEÓN;"06º31'15"" W";"42º35'49"" N";600 m;No
+C.T.Compostilla-Sancedo;Sancedo;LEÓN;"06º39'13"" W";"42º40'15"" N";640 m;No
+C.T.Compostilla-Santa Marina;Santa Marina;LEÓN;"06º30'55"" W";"42º40'22"" N";725 m;Si
+C.T.Compostilla-Villaverde;Villaverde;LEÓN;"06º29'02"" W";"42º36'50"" N";590 m;Si
+C.T.L.R. - Cuadros;Cuadros;LEÓN;"05º38'20"" W";"42º42'56"" N";900 m;Si
+C.T.L.R. - La Robla;La Robla;LEÓN;"05º38'56"" W";"42º48'06"" N"; m;SI
+C.T.L.R. - Naredo;Naredo;LEÓN;"05º32'00"" W";"42º49'00"" N";950 m;Si
+C.T.L.R. - Ventosilla;Ventosilla;LEÓN;"05º39'43"" W";"42º56'39"" N";1130 m;Si
+Carracedelo;Carracedelo;LEÓN;"06º43'32"" W";"42º33'31"" N";450 m;Si
+La Robla;Barrio de Las Heras;LEÓN;"05º37'25"" W";"42º48'10"" N";945 m;Si
+Lario;Casa del Parque Picos Europa;LEÓN;"05º05'26"" W";"43º02'28"" N";1145 m;Si
+Leon 4;Coto Escolar;LEÓN;"05º33'59"" W";"42º34'31"" N";814 m;Si
+Leon1;Avda. San Ignacio de Loyola;LEÓN;"05º35'14"" W";"42º36'14"" N";838 m;Si
+Leon2;Plaza de Toros;LEÓN;"05º34'17"" W";"42º35'19"" N";838 m;No
+Leon3;San Juan de Sahagún;LEÓN;"05º33'53"" W";"42º36'32"" N";838 m;No
+Otero;Otero;LEÓN;"06º46'55"" W";"42º33'52"" N";540 m;Si
+Ponferrada1;Estación de autobuses;LEÓN;"06º36'01"" W";"42º33'12"" N";541 m;No
+Ponferrada2;Paseo de San Antonio;LEÓN;"06º35'10"" W";"42º33'05"" N";541 m;No
+Ponferrada3;Avda Huertas del Sacramento;LEÓN;"06º35'20"" W";"42º32'30"" N";541 m;No
+Ponferrada4;Albergue de Peregrinos;LEÓN;"06º35'05"" W";"42º32'34"" N";541 m;Si
+Ponferrada5;Parque de Cuatro Vientos;LEÓN;"06º37'30"" W";"42º33'28"" N";541 m;No
+Toral de los Vados;Toral de los Vados;LEÓN;"06º43'32"" W";"42º32'42"" N";437 m;Si
+Tudela Veguin-Tudela Veguin;La Robla;LEÓN;"05º38'56"" W";"42º48'06"" N";;Si
+C.T.G. - Compuerto;Compuerto;PALENCIA;"04º50'09"" W";"42º50'57"" N";1160 m;Si
+C.T.G. - Villalba;Villalba;PALENCIA;"04º49'38"" W";"42º42'13"" N";1050 m;Si
+Guardo;Calle Río Ebro;PALENCIA;"04º50'27"" W";"42º47'43"" N";1120 m;Si
+Hontoria 1 - Poblado;Poblado;PALENCIA;"04º28'12"" W";"41º55'58"" N";721 m;Si
+Hontoria 2 - Venta de BaÃ±os;Venta de Baños;PALENCIA;"04º27'57"" W";"41º56'53"" N";732 m;Si
+Hontoria 2 - Venta de Baños;Venta de Baños;PALENCIA;"04º27'57"" W";"41º56'53"" N";732 m;Si
+Palencia1;Avda Manuel Rivera;PALENCIA;"04º31'37"" W";"42º00'36"" N";739 m;No
+Palencia2;Campo de la Juventud;PALENCIA;"04º31'29"" W";"42º00'13"" N";739 m;No
+Palencia 3;C/ Miravalles;PALENCIA;"04º32'18"" W";"42º01'10"" N";953 m;Si
+Renault4;Villamuriel de cerrato;PALENCIA;"04º29'40"" W";"41º57'41"" N";734 m;Si
+Velilla del Rio Carrion;Casa de la Juventud;PALENCIA;"04º50'35"" W";"42º49'41"" N";1124 m;No
+Venta de Baños;Avenida 1º de Junio;PALENCIA;"04º29'38"" W";"41º55'22"" N";720 m;No
+El Maillo;Helipuerto;SALAMANCA;"06º13'21"" W";"40º34'14"" N";1034 m;Si
+Salamanca1;Avda de Portugal;SALAMANCA;"05º39'46"" W";"40º58'25"" N";797 m;No
+Salamanca2;La Marina;SALAMANCA;"05º39'21"" W";"40º57'55"" N";797 m;No
+Salamanca3;Avenida de Alemania;SALAMANCA;"05º40'06"" W";"40º58'03"" N";797 m;No
+Salamanca4;C/ Maestro Serrano;SALAMANCA;"05º39'30"" W";"40º56'59"" N";797 m;No
+Salamanca5;C/ La Bañeza;SALAMANCA;"05º39'55"" W";"40º58'45"" N";797 m;Si
+Salamanca6;Aldehuela de los Guzmanes;SALAMANCA;"05º38'23"" W";"40º57'39"" N";743 m;Si
+Segovia 2;C/ De Las Nieves;SEGOVIA;"04º06'38"" W";"40º57'20"" N";952 m;Si
+Segovia;Acueducto;SEGOVIA;"04º06'57"" W";"40º56'59"" N";1002 m;No
+Muriel de la Fuente;Casa del Parque Fuentona;SORIA;"02º51'25"" W";"41º43'25"" N";1005 m;Si
+Soria;Avenida de Valladolid;SORIA;"02º28'00"" W";"41º46'00"" N";1090 m;Si
+Arco Ladrillo I;Arco Ladrillo I;VALLADOLID;"04º43'49"" W";"41º38'37"" N";680 m;NO
+Arco de ladrillo II;Arco Ladrillo;VALLADOLID;"04º43'49"" W";"41º38'44"" N";700 m;Si
+Cementerio;Cementerio;VALLADOLID;"04º41'43"" W";"41º40'34"" N";693 m;NO
+Labradores II;Labradores II;VALLADOLID;"04º43'10"" W";"41º38'49"" N";693 m;NO
+La rubia II;La Rubia;VALLADOLID;"04º44'26"" W";"41º37'48"" N";683 m;Si
+Medina del Campo;Estación de autobuses;VALLADOLID;"04º54'33"" W";"41º18'59"" N";721 m;Si
+Michelin1;Paseo del Cauce;VALLADOLID;"04º42'54"" W";"41º39'59"" N";694 m;Si
+Michelin2;Fuente Berrocal;VALLADOLID;"04º44'28"" W";"41º41'00"" N";753 m;Si
+Puente Regueral;Puente Regueral;VALLADOLID;"04º44'02"" W";"41º39'22"" N";691 m;Si
+Renault1;Informática;VALLADOLID;"04º43'57"" W";"41º36'00"" N";706 m;Si
+Renault2;Motores;VALLADOLID;"04º43'44"" W";"41º36'15"" N";705 m;Si
+Renault3;Carrocerías;VALLADOLID;"04º44'27"" W";"41º36'46"" N";698 m;Si
+Santa Teresa;Santa Teresa;VALLADOLID;"04º43'31"" W";"41º39'40"" N";691 m;NO
+VALLADOLID SUR;Olimpiadas 4;VALLADOLID;"04º46'20"" W";"41º36'41"" N";675 m;Si
+Vega Sicilia;Vega Sicilia;VALLADOLID;"04º44'48"" W";"41º37'14"" N";690 m;Si
+Zamora;Jardines Eduardo Barrón;ZAMORA;"05º44'19"" W";"41º30'26"" N";720 m;No
+Zamora 2;Ctra Villalpando;ZAMORA;"05º44'47"" W";"41º30'35"" N";720 m;Si
+PEÑAUSENDE;Teso Santo;ZAMORA;"05º52'01"" W";"41º17'20"" N";985 m;Si
+San Martín de Valdeiglesias;San Martín de Valdeiglesias;MADRID;"04º23'48"" W";"40º23'13"" N";549 m;Si
