@@ -34,8 +34,7 @@ from PIL import Image, ImageDraw, ImageFont
 from cStringIO import StringIO
 import imageio
 import numpy
-from selenium import webdriver
-from selenium.webdriver.support.ui import Select
+from bs4 import BeautifulSoup
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename='./logs/'+datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+'.log', filemode='w',level=logging.INFO)
@@ -377,21 +376,13 @@ def cambiarConfiguracion(bot,user,opcion,query):
     return
 
 def calidadAire(bot, update):
-    driver = webdriver.Firefox()
-    driver.get("http://servicios.jcyl.es/esco/datosTiempoReal.action")
-
-    Select(driver.find_element_by_id("provincia")).select_by_value("42")
-    Select(driver.find_element_by_id("estacion")).select_by_value("61")
-
-    consultar = driver.find_element_by_id("consultar")
-    driver.execute_script("arguments[0].value = '1';", consultar)
-    driver.find_element_by_id("frmConsulta").submit()
-
-    row = driver.find_elements_by_class_name("success")[-1]
-    data = [cell.text for cell in row.find_elements_by_xpath(".//td")]
+    html_page = urllib2.urlopen("http://servicios.jcyl.es/esco/datosTiempoReal.action?provincia=42&estacion=61&consultar=1")
+    soup = BeautifulSoup(html_page)
+    row = soup.findAll('tr','success')[-1]
+    data = [cell.get_text(strip=True) for cell in row.findAll('td')]
 
     send_message(bot=bot,chat_id=update.effective_chat.id,
-        text=u'**Calidad del aire:\n' + data[-1] + u' ' + data[1] + u'\nCO (mg/m3): ' + data[2] + u'\nNO (ug/m3): ' + data[3] + u'\nNO2 (ug/m3): ' + data[4] + u'\nO3 (ug/m3): ' + data[5] + u'\nPM10 (ug/m3): ' + data[6] + u'\nPM25 (ug/m3) ' + data[7] + u'\nSO2 (ug/m3) ' + data[8],
+        text=u'**Calidad del aire**:\n' + data[-1] + u' ' + data[1] + u'\nCO (mg/m3): ' + data[2] + u'\nNO (ug/m3): ' + data[3] + u'\nNO2 (ug/m3): ' + data[4] + u'\nO3 (ug/m3): ' + data[5] + u'\nPM10 (ug/m3): ' + data[6] + u'\nPM25 (ug/m3) ' + data[7] + u'\nSO2 (ug/m3) ' + data[8],
         parse_mode=ParseMode.MARKDOWN)
 
 
