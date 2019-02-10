@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+NO2NO2#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # mongod --dbpath ./data
@@ -400,15 +400,83 @@ def calidadAire(bot, update):
         return
 
     data = [ cell.get_text(strip=True) for cell in row.findAll('td')]
+    caqi = CAQI([float(x.replace(',','.').encode('utf-8')) if x is not u'' else 0 for x in data[1:8]])
     data[1:8] = ['{:5.1f}'.format(float(x.replace(',','.'))).replace('.',',') if x is not u'' else u'  —' for x in data[1:8]]
 
     send_message(bot=bot,chat_id=update.effective_chat.id,
-        text=u'*Calidad del aire*:\n[' + data[-1] + u'](https://www.google.com/maps?q=' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lat"]) + u',' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lon"]) + u') ' + data[0] + u'```\nCO   (mg/m³): ' + data[1] + u'\nNO   (μg/m³): ' + data[2] + u'\nNO₂  (μg/m³): ' + data[3] + u'\nO₃   (μg/m³): ' + data[4] + u'\nPM10 (μg/m³): ' + data[5] + u'\nPM25 (μg/m³): ' + data[6] + u'\nSO₂  (μg/m³): ' + data[7] + u'```',
+        text=u'*Calidad del aire*: `' + caqi + u'`\n[' + data[-1] + u'](https://www.google.com/maps?q=' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lat"]) + u',' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lon"]) + u') ' + data[0] + u'```\nCO   (mg/m³): ' + data[1] + u'\nNO   (μg/m³): ' + data[2] + u'\nNO₂  (μg/m³): ' + data[3] + u'\nO₃   (μg/m³): ' + data[4] + u'\nPM10 (μg/m³): ' + data[5] + u'\nPM25 (μg/m³): ' + data[6] + u'\nSO₂  (μg/m³): ' + data[7] + u'```',
         parse_mode=ParseMode.MARKDOWN)
 
-def formatoCalidadAire(dato):
-    output
-
+def CAQI(mediciones):
+    CO,NO,NO2,O3,PM10,PM25,SO2 = mediciones
+    indexes = [0,0,0,0,0,0]
+    if CO < 5000:
+        indexes[0] = 25*(CO - 0)/(5000 - 0) + 0
+    elif CO < 7500:
+        indexes[0] = 25*(CO - 5000)/(7500 - 5000) + 25
+    elif CO < 10000:
+        indexes[0] = 25*(CO - 7500)/(10000 - 7500) + 50
+    elif CO < 20000:
+        indexes[0] = 25*(CO - 10000)/(20000 - 10000) + 75
+    else:
+        indexes[0] = 101
+    if NO2 < 50:
+        indexes[1] = 25*(NO2 - 0)/(50 - 0) + 0
+    elif NO2 < 100:
+        indexes[1] = 25*(NO2 - 50)/(100 - 50) + 25
+    elif NO2 < 200:
+        indexes[1] = 25*(NO2 - 100)/(200 - 100) + 50
+    elif NO2 < 400:
+        indexes[1] = 25*(NO2 - 200)/(400 - 200) + 75
+    else:
+        indexes[1] = 101
+    if O3 < 60:
+        indexes[2] = 25*(O3 - 0)/(60 - 0) + 0
+    elif O3 < 100:
+        indexes[2] = 25*(O3 - 60)/(120 - 60) + 25
+    elif O3 < 180:
+        indexes[2] = 25*(O3 - 120)/(180 - 120) + 50
+    elif O3 < 240:
+        indexes[2] = 25*(O3 - 180)/(240 - 180) + 75
+    else:
+        indexes[2] = 101
+    if PM10 < 25:
+        indexes[3] = 25*(PM10 - 0)/(25 - 0) + 0
+    elif PM10 < 50:
+        indexes[3] = 25*(PM10 - 25)/(50 - 25) + 25
+    elif PM10 < 90:
+        indexes[3] = 25*(PM10 - 50)/(90 - 50) + 50
+    elif PM10 < 180:
+        indexes[3] = 25*(PM10 - 90)/(180 - 90) + 75
+    else:
+        indexes[3] = 101
+    if PM25 < 15:
+        indexes[4] = 25*(PM25 - 0)/(15 - 0) + 0
+    elif PM25 < 30:
+        indexes[4] = 25*(PM25 - 15)/(30 - 15) + 25
+    elif PM25 < 55:
+        indexes[4] = 25*(PM25 - 30)/(55 - 30) + 50
+    elif PM25 < 110:
+        indexes[4] = 25*(PM25 - 55)/(110 - 55) + 75
+    else:
+        indexes[4] = 101
+    if SO2 < 50:
+        indexes[5] = 25*(SO2 - 0)/(50 - 0) + 0
+    elif SO2 < 100:
+        indexes[5] = 25*(SO2 - 50)/(100 - 50) + 25
+    elif SO2 < 350:
+        indexes[5] = 25*(SO2 - 100)/(350 - 100) + 50
+    elif SO2 < 500:
+        indexes[5] = 25*(SO2 - 350)/(500 - 350) + 75
+    else:
+        indexes[5] = 101
+    print("CO " + str(CO) + " NO2 " + str(NO2) + " O3 " + str(O3) + " PM10 " + str(PM10) + " PM25 " + str(PM25) + " SO2 " + str(SO2))
+    print(indexes)
+    caqi = max(indexes)
+    if caqi == 101:
+        return ">100"
+    else:
+        return str(caqi)
 
 @run_async
 def mapa(bot,update):
