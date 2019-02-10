@@ -390,7 +390,15 @@ def calidadAire(bot, update):
         return
     html_page = urllib2.urlopen("http://servicios.jcyl.es/esco/datosTiempoReal.action?provincia=" + municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["provincia"] + "&estacion=" + municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["value"] + "&tamanoPagina=50&consultar=1")
     soup = BeautifulSoup(html_page,"html.parser")
-    row = soup.findAll('tr','success')[-1]
+    table = soup.findAll('tr','success')
+    if table:
+        row = table[-1]
+    else:
+        send_message(bot=bot,chat_id=user["_id"],
+            text=u'Todavía no hay datos sobre la calidad de aire de hoy, vuelve a consultarlo más tarde.',
+            parse_mode=ParseMode.MARKDOWN)
+        return
+
     data = [ cell.get_text(strip=True) for cell in row.findAll('td')]
     data[1:8] = ['{:5.1f}'.format(float(x.replace(',','.'))).replace('.',',') if x is not u'' else u'  —' for x in data[1:8]]
 
