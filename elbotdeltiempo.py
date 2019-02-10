@@ -383,7 +383,7 @@ def calidadAire(bot, update):
             text=textoMunicipio(None),
             parse_mode=ParseMode.MARKDOWN)
         return
-    if user["municipio"] not in municipiosCalidadAire:
+    if user["municipio"].lower().encode('utf-8') not in municipiosCalidadAire:
         send_message(bot=bot,chat_id=user["_id"],
             text=u'Lo siento, de momento solo dispongo de datos sobre la calidad del aire para municipios de Castilla y León.',
             parse_mode=ParseMode.MARKDOWN)
