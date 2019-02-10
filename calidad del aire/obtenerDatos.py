@@ -11,7 +11,7 @@ import re
 from math import cos, asin, sqrt
 
 def dms2dd(dms):
-  deg, minutes, seconds, direction = re.split('[º\'"]+', dms)
+  deg, minutes, seconds, direction = re.split('[º\'"]+', dms.replace(' ',''))
   return (float(deg) + float(minutes)/60 + float(seconds)/(60*60)) * (-1 if direction in ['W', 'S'] else 1)
 
 def distance(lat1, lon1, lat2, lon2):
@@ -27,7 +27,7 @@ for provincia in provincias:
   estacionesProvincia = soup.find("select", {"id": "estacion"})
   for estacion in estacionesProvincia.findAll('option'):
     if not estacion.get_text() == 'Todas':
-      estaciones[estacion.get_text()] = {"value":estacion['value']}
+      estaciones[estacion.get_text()] = {"value":estacion['value'], "provincia":str(provincia)}
 
 with open('estaciones.csv', 'r') as csvfile:
   spamreader = csv.reader(csvfile, delimiter=';')
@@ -36,6 +36,9 @@ with open('estaciones.csv', 'r') as csvfile:
       estaciones[row[0]]["lon"] = dms2dd(row[3])
       estaciones[row[0]]["lat"] = dms2dd(row[4])
 
+if "lon" not in estaciones["Puente Poniente-Mº Luisa Sánchez"]:
+    del estaciones["Puente Poniente-Mº Luisa Sánchez"]
+
 municipios = {}
 
 with open('municipios.csv', 'r', encoding='latin') as csvfile:
@@ -43,17 +46,21 @@ with open('municipios.csv', 'r', encoding='latin') as csvfile:
   next(spamreader)
   for row in spamreader:
     dist = float('inf')
+    value = ""
+    provincia = ""
     for nombre, estacion in estaciones.items():
       newdist = distance(float(row[9].replace(',','.')),float(row[10].replace(',','.')),estacion["lon"],estacion["lat"])
       if newdist < dist:
         dist = newdist
-        municipios[row[0].lower()] = {"value": estacion["value"], "provincia":row[3]}
+        value = estacion["value"]
+        provincia = estacion["provincia"]
+    municipios[row[0].lower()] = {"value": value, "provincia": provincia}
 
 
 
 
 f = open('municipiosCalidadAire.py','w')
-f.write("municipiosCalidadAire = " + str(municipios))
+f.write("municipiosCalidadAire = " + str(municipios) + "\n")
 f.write("\n")
-f.write("estaciones = " + str(estaciones))
+f.write("estaciones = " + str(estaciones) + "\n")
 f.close()
