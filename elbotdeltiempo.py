@@ -173,6 +173,9 @@ def comandoTiempoMenu(bot,update):
                 [InlineKeyboardButton(u"Hoy (cada 2 horas)", callback_data='tiempoMenuHOY2H')],
                 [InlineKeyboardButton(u"Mañana (cada 2 horas)", callback_data='tiempoMenuMANYANA2H')],
                 [InlineKeyboardButton(u"Hoy y Mañana (cada 2 h)", callback_data='tiempoMenuHOYMANYANA2H')]]
+    user = getUser(bot, update)
+    if user["municipio"].lower().encode('utf-8') in municipiosCalidadAire:
+        keyboard.append([InlineKeyboardButton(u"Calidad del aire", callback_data='calidadAire')])
     reply_markup = InlineKeyboardMarkup(keyboard)
     send_message(bot=bot,text=u"Elige la predicción:",
                           chat_id=update.effective_chat.id,
@@ -365,6 +368,10 @@ def configuracionMenu(bot, update):
         user["alerta"] = (user["alerta"]+1) %3
         collection.update_one({'_id':user["_id"]}, {"$set": {"alerta": user["alerta"]}}, upsert=False)
         query.edit_message_reply_markup(reply_markup=crearTecladoConfigurar(user))
+        return
+    if query["data"] == "calidadAire":
+        bot.delete_message(chat_id=query.message.chat_id,message_id=query.message.message_id)
+        calidadAire(bot, update)
         return
     #cambiar la configuración de viento / sensación térmica / humedad relativa
     cambiarConfiguracion(bot,user,query["data"],query)
