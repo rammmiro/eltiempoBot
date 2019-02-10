@@ -483,7 +483,7 @@ def CAQI(mediciones):
     if caqi == 101:
         return ">100"
     else:
-        return str(caqi)
+        return str(int(caqi))
 
 @run_async
 def mapa(bot,update):
