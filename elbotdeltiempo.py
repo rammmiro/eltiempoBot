@@ -28,7 +28,7 @@ from pymongo import MongoClient
 import subprocess
 import os
 from municipios import municipios
-from municipiosCalidadAire import municipiosCalidadAire
+from municipiosCalidadAire import municipiosCalidadAire, estaciones
 from auxiliar import estados_cielo, direccion_viento, num_emoji, active_emoji, alerta_text, dia_semana, predicciones, alertas, mapaCodigo
 from config import TELEGRAMTOKEN, GOOGLEMAPSKEY, BOTNAME, ADMIN
 from PIL import Image, ImageDraw, ImageFont
@@ -403,7 +403,7 @@ def calidadAire(bot, update):
     data[1:8] = ['{:5.1f}'.format(float(x.replace(',','.'))).replace('.',',') if x is not u'' else u'  —' for x in data[1:8]]
 
     send_message(bot=bot,chat_id=update.effective_chat.id,
-        text=u'*Calidad del aire*:\n' + data[-1] + u' ' + data[0] + u'```\nCO   (mg/m³): ' + data[1] + u'\nNO   (μg/m³): ' + data[2] + u'\nNO₂  (μg/m³): ' + data[3] + u'\nO₃   (μg/m³): ' + data[4] + u'\nPM10 (μg/m³): ' + data[5] + u'\nPM25 (μg/m³): ' + data[6] + u'\nSO₂  (μg/m³): ' + data[7] + u'```',
+        text=u'*Calidad del aire*:\n(' + data[-1] + u')[https://www.google.com/maps?q=' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lon"]) + u',' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lat"]) + u']' + data[0] + u'```\nCO   (mg/m³): ' + data[1] + u'\nNO   (μg/m³): ' + data[2] + u'\nNO₂  (μg/m³): ' + data[3] + u'\nO₃   (μg/m³): ' + data[4] + u'\nPM10 (μg/m³): ' + data[5] + u'\nPM25 (μg/m³): ' + data[6] + u'\nSO₂  (μg/m³): ' + data[7] + u'```',
         parse_mode=ParseMode.MARKDOWN)
 
 def formatoCalidadAire(dato):
