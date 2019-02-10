@@ -403,7 +403,7 @@ def calidadAire(bot, update):
     data[1:8] = ['{:5.1f}'.format(float(x.replace(',','.'))).replace('.',',') if x is not u'' else u'  —' for x in data[1:8]]
 
     send_message(bot=bot,chat_id=update.effective_chat.id,
-        text=u'*Calidad del aire*:\n[' + data[-1] + u'](https://www.google.com/maps?q=' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lat"]) + u',' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lon"]) + u')' + data[0] + u'```\nCO   (mg/m³): ' + data[1] + u'\nNO   (μg/m³): ' + data[2] + u'\nNO₂  (μg/m³): ' + data[3] + u'\nO₃   (μg/m³): ' + data[4] + u'\nPM10 (μg/m³): ' + data[5] + u'\nPM25 (μg/m³): ' + data[6] + u'\nSO₂  (μg/m³): ' + data[7] + u'```',
+        text=u'*Calidad del aire*:\n[' + data[-1] + u'](https://www.google.com/maps?q=' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lat"]) + u',' + str(estaciones[municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["estacion"]]["lon"]) + u') ' + data[0] + u'```\nCO   (mg/m³): ' + data[1] + u'\nNO   (μg/m³): ' + data[2] + u'\nNO₂  (μg/m³): ' + data[3] + u'\nO₃   (μg/m³): ' + data[4] + u'\nPM10 (μg/m³): ' + data[5] + u'\nPM25 (μg/m³): ' + data[6] + u'\nSO₂  (μg/m³): ' + data[7] + u'```',
         parse_mode=ParseMode.MARKDOWN)
 
 def formatoCalidadAire(dato):
@@ -499,7 +499,8 @@ def mapaRegional(bot,update):
 def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,reply_markup=None,repeticiones=0):
     if repeticiones < 5:
         try:
-            return bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup)
+            bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup,disable_web_page_preview=True)
+            return
         except TimedOut:
             logger.info('timed out %s al enviar mensaje', str(repeticiones))
             send_message(bot=bot,chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup,repeticiones = (repeticiones+1))
