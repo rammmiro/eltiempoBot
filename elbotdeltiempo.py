@@ -378,6 +378,16 @@ def cambiarConfiguracion(bot,user,opcion,query):
 
 def calidadAire(bot, update):
     user = getUser(bot, update)
+    if "municipio" not in user:
+        send_message(bot=bot,chat_id=user["_id"],
+            text=textoMunicipio(None),
+            parse_mode=ParseMode.MARKDOWN)
+        return
+    if user["municipio"] not in municipiosCalidadAire:
+        send_message(bot=bot,chat_id=user["_id"],
+            text=u'Lo siento, de momento solo dispongo de datos sobre la calidad del aire para municipios de Castilla y León.',
+            parse_mode=ParseMode.MARKDOWN)
+        return
     html_page = urllib2.urlopen("http://servicios.jcyl.es/esco/datosTiempoReal.action?provincia=" + municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["provincia"] + "&estacion=" + municipiosCalidadAire[user["municipio"].lower().encode('utf-8')]["value"] + "&tamanoPagina=50&consultar=1")
     soup = BeautifulSoup(html_page,"html.parser")
     row = soup.findAll('tr','success')[-1]
