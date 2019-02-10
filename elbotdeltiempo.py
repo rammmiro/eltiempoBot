@@ -470,8 +470,8 @@ def CAQI(mediciones):
         indexes[5] = 25*(SO2 - 350)/(500 - 350) + 75
     else:
         indexes[5] = 101
-    print("CO " + str(CO) + " NO2 " + str(NO2) + " O3 " + str(O3) + " PM10 " + str(PM10) + " PM25 " + str(PM25) + " SO2 " + str(SO2))
-    print(indexes)
+    #print("CO " + str(CO) + " NO2 " + str(NO2) + " O3 " + str(O3) + " PM10 " + str(PM10) + " PM25 " + str(PM25) + " SO2 " + str(SO2))
+    #print(indexes)
     caqi = max(indexes)
     if caqi == 101:
         return ">100"
