@@ -1,12 +1,12 @@
-*Autor*: Ramiro Martínez Pinilla
+**Autor**: Ramiro Martínez Pinilla
 
-*Título del proyecto*: El Bot del Tiempo
+**Título del proyecto**: El Bot del Tiempo
 
-*Categoría*: Productos y Servicios
+**Categoría**: Productos y Servicios
 
-*Estudiante*: estudiante de doctorado en la Universitat Politècnica de Catalunya
+**Estudiante**: estudiante de doctorado en la Universitat Politècnica de Catalunya
 
-*URL*: [https://telegram.me/eltiempoBot](https://telegram.me/eltiempoBot)
+**URL**: [https://telegram.me/eltiempoBot](https://telegram.me/eltiempoBot)
 
 Memoria:
 -------
@@ -21,7 +21,7 @@ Por ello es el objetivo de este proyecto hacer accesibles los datos sobre la cal
 
 El autor de este proyecto desarrolló hace unos meses @eltiempoBot (disponible a través de [http://telegram.me/eltiempoBot](http://telegram.me/eltiempoBot)), especializado en enviar información metereológica obtenida de AEMet a través de esta aplicación de mensajería. Se trata de un proyecto personal que comenzó para conocer la previsión meteorológica del dia siguiente a través de mensajes de texto automáticos, sin necesidad de tener que buscar activamente la información ni instalar ninguna aplicación dedicada. Actualmente incluye la posibilidad de recibir predicciones meteorológicas por horas o días, alertas cuando haya posibilidad de precipitaciones y acceso a animaciones de radar con la cantidad de precipitaciones. Al ser accesible para cualquier usuario de Telegram actualmente alrededor de medio millar de personas lo utilizan diariamente en toda España.
 
-Este proyecto ha consistido en la integración de @eltiempoBot con los datos abiertos de calidad del aire (por horas) que proporciona la Junta de Castilla y León. De esta forma, si el bot está configurado con un municipio de Castilla y León, responderá al comando `/calidadAire` con los datos más actualizados de la estación más cercana (y un enlace a la ubicación de esta estación en google maps). También es posible obtener esta información desde el menú accesible con el comando `/tiempoMenu.
+Este proyecto ha consistido en la integración de @eltiempoBot con los datos abiertos de calidad del aire (por horas) que proporciona la Junta de Castilla y León. De esta forma, si el bot está configurado con un municipio de Castilla y León, responderá al comando `/calidadAire` con los datos más actualizados de la estación más cercana (y un enlace a la ubicación de esta estación en google maps). También es posible obtener esta información desde el menú accesible con el comando `/tiempoMenu`.
 
 Además de los datos brutos con la cantidad de partículas en el aire el bot calcula y muestra el índice de calidad del aire. En concreto se utilizan los datos brutos para calcular el Indice de Calidad del Aire Común (CAQI por sus siglas en inglés) a partir de los umbrales establecidos. Este índice estandarizado a nivel europeo permite resumir la calidad del aire con una escala de 0 a 100, donde 0 representaría ausencia de partículas y 100 representaría un entorno muy contaminado. De esta forma con un vistazo es posible conocer el nivel relativo de contaminación y poder interpretar los valores absolutos de los datos brutos. Los valores obtenidos con este índice no permiten establecer el nivel exacto de riesgo para la salud que supone la contaminación, pero sí sirven como indicador, para poder establecer comparativas y para concienciar a la población. Creemos que es importante que las apliaciones que utilicen los datos abiertos tengan un valor añadido, como es en este caso el cálculo de este índice, para hacer la información más accesible y/o fácil de interpretar.
 
