@@ -229,7 +229,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
     for dia in dias:
         lluvia = next(item for item in dia.findall('prob_precipitacion') if item.text is not None).text
         if not soloLluvia or lluvia != "0":
-            time.sleep(0.1)
+            time.sleep(0.5)
             send_message(bot=bot,chat_id=user["_id"],
                 text=prediccion(dia,user),
                 parse_mode=ParseMode.MARKDOWN)
@@ -250,6 +250,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
         if hora >= now.hour and today.find('./estado_cielo[@periodo="%s"]' % str(hora).zfill(2)) is not None:
             lluvia = today.find('./precipitacion[@periodo="%s"]' % str(hora).zfill(2)).text
             if not soloLluvia or lluvia != "0":
+                time.sleep(0.5)
                 send_message(bot=bot,chat_id=user["_id"],
                     text=prediccionHora(today,hora,user),
                     parse_mode=ParseMode.MARKDOWN)
@@ -257,6 +258,7 @@ def tiempo(bot,user,prediccionDias,prediccionHoy,prediccionManyana,soloLluvia):
         if tomorrow.find('./estado_cielo[@periodo="%s"]' % str(hora).zfill(2)) is not None:
             lluvia = tomorrow.find('./precipitacion[@periodo="%s"]' % str(hora).zfill(2)).text
             if not soloLluvia or lluvia != "0":
+                time.sleep(0.5)
                 send_message(bot=bot,chat_id=user["_id"],
                     text=prediccionHora(tomorrow,hora,user),
                     parse_mode=ParseMode.MARKDOWN)
@@ -574,6 +576,7 @@ def mapaRegional(bot,update):
 def send_message(bot,chat_id,text,parse_mode=ParseMode.HTML,reply_markup=None,repeticiones=0):
     if repeticiones < 5:
         try:
+            time.sleep(0.1)
             bot.send_message(chat_id=chat_id,text=text,parse_mode=parse_mode,reply_markup=reply_markup,disable_web_page_preview=True)
             return
         except TimedOut:
